@@ -1,0 +1,22 @@
+{
+  "cast_type": "passive",
+  "cooldown": 0,
+  "cost": {},
+  "duration": 0,
+  "max_targets": 1,
+  "name": "Attention to Detail",
+  "next_chain": [],
+  "previous_chain": [],
+  "range": 0,
+  "sources": [{
+    "id": "attention-to-detail",
+    "data_type": "discipline"
+  }],
+  "tags": [
+    "Crafting",
+    "Additional Risk Points"
+  ],
+  "targeting": "self",
+  "type": "passive",
+  "description": "Increases your Additional Risk Points value by 1."
+}

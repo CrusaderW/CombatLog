@@ -1,0 +1,22 @@
+{
+  "cast_type": "passive",
+  "cooldown": 0,
+  "cost": {},
+  "duration": 0,
+  "max_targets": 1,
+  "name": "Project Management",
+  "next_chain": [],
+  "previous_chain": [],
+  "range": 0,
+  "sources": [{
+    "id": "project-management",
+    "data_type": "discipline"
+  }],
+  "tags": [
+    "Crafting",
+    "Partial Re-roll Cost Modifier"
+  ],
+  "targeting": "self",
+  "type": "passive",
+  "description": "Increases your Partial Re-roll Cost Modifier by 25%."
+}

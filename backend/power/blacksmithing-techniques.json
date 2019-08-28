@@ -1,0 +1,22 @@
+{
+  "cast_type": "passive",
+  "cooldown": 0,
+  "cost": {},
+  "duration": 0,
+  "max_targets": 1,
+  "name": "Blacksmithing Techniques",
+  "next_chain": [],
+  "previous_chain": [],
+  "range": 0,
+  "sources": [{
+    "id": "blacksmithing-techniques",
+    "data_type": "discipline"
+  }],
+  "tags": [
+    "Crafting",
+    "Blacksmithing"
+  ],
+  "targeting": "self",
+  "type": "passive",
+  "description": "Increases your Blacksmithing Cap by 20 and Blacksmithing Experimentation Cap by 20."
+}

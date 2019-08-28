@@ -1,0 +1,22 @@
+{
+  "cast_type": "passive",
+  "cooldown": 0,
+  "cost": {},
+  "duration": 0,
+  "max_targets": 0,
+  "name": "Mortal Sin",
+  "next_chain": [],
+  "previous_chain": [],
+  "range": 0,
+  "sources": [{
+    "id": "mortal-sin",
+    "data_type": "discipline"
+  }],
+  "tags": [
+    "Sin",
+    "Mortal Sin"
+  ],
+  "targeting": "self",
+  "type": "passive",
+  "description": "Applies Mortal Sin instead of Sin increasing the enemys chance to be Critically Hit by 2% per stack. All powers requiring Sin benefit from Mortal Sin."
+}

@@ -1,0 +1,22 @@
+{
+  "cast_type": "passive",
+  "cooldown": 0,
+  "cost": {},
+  "duration": 0,
+  "max_targets": 1,
+  "name": "Woodworking Techniques",
+  "next_chain": [],
+  "previous_chain": [],
+  "range": 0,
+  "sources": [{
+    "id": "woodworking-techniques",
+    "data_type": "discipline"
+  }],
+  "tags": [
+    "Crafting",
+    "Woodworking"
+  ],
+  "targeting": "self",
+  "type": "passive",
+  "description": "Increases your Woodworking Cap by 20 and Woodworking Experimentation Cap by 20."
+}

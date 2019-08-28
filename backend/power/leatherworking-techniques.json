@@ -1,0 +1,22 @@
+{
+  "cast_type": "passive",
+  "cooldown": 0,
+  "cost": {},
+  "duration": 0,
+  "max_targets": 1,
+  "name": "Leatherworking Techniques",
+  "next_chain": [],
+  "previous_chain": [],
+  "range": 0,
+  "sources": [{
+    "id": "leatherworking-techniques",
+    "data_type": "discipline"
+  }],
+  "tags": [
+    "Crafting",
+    "Leatherworking"
+  ],
+  "targeting": "self",
+  "type": "passive",
+  "description": "Increases your Leatherworking Cap by 20 and Leatherworking Experimentation Cap by 20."
+}

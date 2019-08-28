@@ -1,0 +1,23 @@
+{
+  "cast_type": "passive",
+  "cooldown": 0,
+  "cost": {},
+  "duration": 6,
+  "max_targets": 1,
+  "name": "Careless Whisper",
+  "next_chain": [],
+  "previous_chain": [],
+  "range": 0,
+  "sources": [{
+    "id": "careless-whisper",
+    "data_type": "discipline"
+  }],
+  "tags": [
+    "Critical Hit Chance",
+    "Critical Damage",
+    "Primary Attack"
+  ],
+  "targeting": "self",
+  "type": "passive",
+  "description": "Grants stack of Whispers when you execute a Primary Attack that damages an enemy. Empowered Whispers is applied to you if you gain 5 Whispers in 12 seconds. Empowered Whispers increases your Critical Hit Chance by 10% and your Critical Damage by 10% for 6 seconds."
+}

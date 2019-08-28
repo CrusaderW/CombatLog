@@ -1,0 +1,19 @@
+{
+  "cast_type": "passive",
+  "cooldown": 0,
+  "cost": {},
+  "duration": 0,
+  "max_targets": 1,
+  "name": "Helper Monkey",
+  "next_chain": [],
+  "previous_chain": [],
+  "range": 0,
+  "sources": [{
+    "id": "helper-monkey",
+    "data_type": "discipline"
+  }],
+  "tags": ["Crafting"],
+  "targeting": "self",
+  "type": "passive",
+  "description": "Increases your Assembly Difficulty Reduction by 10 and Experiment Difficulty Reduction by 10."
+}

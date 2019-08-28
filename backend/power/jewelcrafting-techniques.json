@@ -1,0 +1,22 @@
+{
+  "cast_type": "passive",
+  "cooldown": 0,
+  "cost": {},
+  "duration": 0,
+  "max_targets": 1,
+  "name": "Jewelcrafting Techniques",
+  "next_chain": [],
+  "previous_chain": [],
+  "range": 0,
+  "sources": [{
+    "id": "jewelcrafting-techniques",
+    "data_type": "discipline"
+  }],
+  "tags": [
+    "Crafting",
+    "Jewelcrafting"
+  ],
+  "targeting": "self",
+  "type": "passive",
+  "description": "Increases your Jewelcrafting Cap by 20 and Jewelcrafting Experimentation Cap by 20."
+}

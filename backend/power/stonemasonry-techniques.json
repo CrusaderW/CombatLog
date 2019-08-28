@@ -1,0 +1,22 @@
+{
+  "cast_type": "passive",
+  "cooldown": 0,
+  "cost": {},
+  "duration": 0,
+  "max_targets": 1,
+  "name": "Stonemasonry Techniques",
+  "next_chain": [],
+  "previous_chain": [],
+  "range": 0,
+  "sources": [{
+    "id": "stonemasonry-techniques",
+    "data_type": "discipline"
+  }],
+  "tags": [
+    "Crafting",
+    "Stonemasonry"
+  ],
+  "targeting": "self",
+  "type": "passive",
+  "description": "Increases your Stonemasonry Cap by 20 and Stonemasonry Experimentation Cap by 20."
+}

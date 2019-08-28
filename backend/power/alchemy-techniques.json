@@ -1,0 +1,22 @@
+{
+  "cast_type": "passive",
+  "cooldown": 0,
+  "cost": {},
+  "duration": 0,
+  "max_targets": 1,
+  "name": "Alchemy Techniques",
+  "next_chain": [],
+  "previous_chain": [],
+  "range": 0,
+  "sources": [{
+    "id": "alchemy-techniques",
+    "data_type": "discipline"
+  }],
+  "tags": [
+    "Crafting",
+    "Alchemy"
+  ],
+  "targeting": "self",
+  "type": "passive",
+  "description": "Increases your Alchemy Cap by 20 and Alchemy Experimentation Cap by 20."
+}

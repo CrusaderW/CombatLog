@@ -1,0 +1,22 @@
+{
+  "cast_type": "passive",
+  "cooldown": 0,
+  "cost": {},
+  "duration": 0,
+  "max_targets": 1,
+  "name": "Necromancy Techniques",
+  "next_chain": [],
+  "previous_chain": [],
+  "range": 0,
+  "sources": [{
+    "id": "necromancy-techniques",
+    "data_type": "discipline"
+  }],
+  "tags": [
+    "Crafting",
+    "Necromancy"
+  ],
+  "targeting": "self",
+  "type": "passive",
+  "description": "Increases your Necromancy Cap by 20 and Necromancy Experimentation Cap by 20."
+}
