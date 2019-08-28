@@ -6,7 +6,7 @@ const ACTION_TYPE = {
   HEAL: 'healed',
 };
 
-const log = "2019-06-22T18:14:59.775Z INFO    COMBAT    - Combat _||_ Event=[Hithar Whirlwind hit You for 76  damage.] "
+// const log = "2019-06-22T18:14:59.775Z INFO    COMBAT    - Combat _||_ Event=[Hithar Whirlwind hit You for 76  damage.] "
 
 const getPowersNames = async () => {
   const powersDir = "./power";
@@ -32,12 +32,13 @@ const getPowersNames = async () => {
 };
 
 const getActionType = (eventStr) => {
-  if (eventStr.includes(ACTION_TYPE.HIT)) {
-    return ACTION_TYPE.HIT;
-  }
-
+  // order is importans because of "hit points" substring
   if (eventStr.includes(ACTION_TYPE.HEAL)) {
     return ACTION_TYPE.HEAL;
+  }
+
+  if (eventStr.includes(ACTION_TYPE.HIT)) {
+    return ACTION_TYPE.HIT;
   }
 
   return null;
@@ -52,46 +53,61 @@ const isCritical = (eventPart) => eventPart.includes('(Critical)');
 
 const getSkillName = (skillByAndSkillNamePart, powerNames = []) => {
   const splitted = skillByAndSkillNamePart.trim().split(' ').reverse();
+  let skillName = splitted[0];
 
-  for (let ind = 0, skillName = splitted[0]; ind < splitted.length; ind++) {
+  for (let ind = 1; ind < splitted.length; ind++) {
     if (powerNames.includes(skillName)) {
       return skillName;
     }
 
-    skillName = `${skillName} ${splitted[ind]}`
+    skillName = `${splitted[ind]} ${skillName}`
   }
 
-  return null;
+  return powerNames.includes(skillName) ? skillName : null;
 };
 
 const getSkillBy = (skillByAndSkillNamePart, skillName) =>
-  skillByAndSkillNamePart.slice(0, skillByAndSkillNamePart.indexOf(skillName)).trim();
+  skillName ?
+    skillByAndSkillNamePart.slice(0, skillByAndSkillNamePart.indexOf(skillName)).trim() :
+    skillByAndSkillNamePart.trim();
 
 const getSkillTarget = (skillTargetAndSkillAmountPart) =>
   skillTargetAndSkillAmountPart.split('for')[0].trim();
 
-
 const getSkillAmount = (skillTargetAndSkillAmountPart) =>
   parseFloat(skillTargetAndSkillAmountPart.split('for')[1].trim());
 
-(async () => {
-  const powerNames = await getPowersNames();
+const parseLog = async (line, powerNames) => {
+  const actionType = getActionType(line);
+  if (actionType === null) {
+    console.warn('[WARN] line was skipped cause action type not defined')
+    return;
+  }
 
-  const eventPart = log.split("Event=[")[1].trim().slice(0, -1);
-  const actionType = getActionType(eventPart);
+  const eventPart = line.split("Event=[")[1].trim().slice(0, -1);
+
   const splittedByActionType = getSplittedByActionType(eventPart, actionType);
   const skillByAndSkillNamePart = splittedByActionType[0];
   const skillTargetAndSkillAmountPart = splittedByActionType[1];
+  console.log('splittedByActionType', splittedByActionType);
 
   const skillName = getSkillName(skillByAndSkillNamePart, powerNames)
 
   return {
     actionType,
     skillName,
-    dateTime: getDateTime(log),
+    dateTime: getDateTime(line),
     skillBy: getSkillBy(skillByAndSkillNamePart, skillName),
     skillTarget: getSkillTarget(skillTargetAndSkillAmountPart),
     skillAmount: getSkillAmount(skillTargetAndSkillAmountPart),
     skillCritical: isCritical(eventPart),
   }
-})()
+};
+
+const parseFile = async filename => {
+  const powerNames = await getPowersNames();
+  const logs = await fsPromises.readFile(filename, { encoding: "utf8" });
+  return Promise.all(logs.split('\n').map((log) => parseLog(log, powerNames)));
+};
+
+module.exports = { parseFile };
