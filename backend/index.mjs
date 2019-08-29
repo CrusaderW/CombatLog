@@ -17,6 +17,12 @@ const upload = multer({ dest: 'uploads/' })
 
 polka()
   .use(serve)
+  .get('/logIds', async (req, res) => {
+    res.end(JSON.stringify(await CombatLog.distinct("logId")));
+  })
+  .get("/logsById/:logId", async (req, res) => {
+    res.end(JSON.stringify(await CombatLog.find({ logId: req.params.logId })));
+  })
   .post('/uploadLog', upload.single('file'), async (req, res) => {
     const parsedLog = await parseFile(req.file.path);
     const logId = new mongoose.Types.ObjectId();
