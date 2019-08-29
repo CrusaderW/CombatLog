@@ -1,4 +1,5 @@
-const fs = require("fs")
+import fs from 'fs';
+
 const fsPromises = fs.promises;
 
 const ACTION_TYPE = {
@@ -31,7 +32,7 @@ const getPowersNames = async () => {
   return powerNames;
 };
 
-const getActionType = (eventStr) => {
+const getSkillAction = (eventStr) => {
   // order is importans because of "hit points" substring
   if (eventStr.includes(ACTION_TYPE.HEAL)) {
     return ACTION_TYPE.HEAL;
@@ -46,8 +47,8 @@ const getActionType = (eventStr) => {
 
 const getDateTime = (log) => new Date(log.split(' ')[0])
 
-const getSplittedByActionType = (eventPart, actionType) =>
-  eventPart.split(actionType).map(part => part.trim());
+const getSplittedBySkillAction = (eventPart, skillAction) =>
+  eventPart.split(skillAction).map(part => part.trim());
 
 const isCritical = (eventPart) => eventPart.includes('(Critical)');
 
@@ -78,23 +79,22 @@ const getSkillAmount = (skillTargetAndSkillAmountPart) =>
   parseFloat(skillTargetAndSkillAmountPart.split('for')[1].trim());
 
 const parseLog = async (line, powerNames) => {
-  const actionType = getActionType(line);
-  if (actionType === null) {
+  const skillAction = getSkillAction(line);
+  if (skillAction === null) {
     console.warn('[WARN] line was skipped cause action type not defined')
     return;
   }
 
   const eventPart = line.split("Event=[")[1].trim().slice(0, -1);
 
-  const splittedByActionType = getSplittedByActionType(eventPart, actionType);
-  const skillByAndSkillNamePart = splittedByActionType[0];
-  const skillTargetAndSkillAmountPart = splittedByActionType[1];
-  console.log('splittedByActionType', splittedByActionType);
+  const splittedBySkillAction = getSplittedBySkillAction(eventPart, skillAction);
+  const skillByAndSkillNamePart = splittedBySkillAction[0];
+  const skillTargetAndSkillAmountPart = splittedBySkillAction[1];
 
   const skillName = getSkillName(skillByAndSkillNamePart, powerNames)
 
   return {
-    actionType,
+    skillAction,
     skillName,
     dateTime: getDateTime(line),
     skillBy: getSkillBy(skillByAndSkillNamePart, skillName),
@@ -104,10 +104,8 @@ const parseLog = async (line, powerNames) => {
   }
 };
 
-const parseFile = async filename => {
+export const parseFile = async filename => {
   const powerNames = await getPowersNames();
   const logs = await fsPromises.readFile(filename, { encoding: "utf8" });
   return Promise.all(logs.split('\n').map((log) => parseLog(log, powerNames)));
 };
-
-module.exports = { parseFile };

@@ -60,3 +60,9 @@ typings/
 
 # next.js build output
 .next
+
+#dist
+backend/public
+
+#uploaded data
+backend/uploads
