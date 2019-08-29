@@ -1,5 +1,6 @@
 import { join } from 'path';
 import polka from 'polka';
+import mongoose from 'mongoose'
 import serveStatic from 'serve-static';
 import multer from 'multer';
 import { parseFile } from './combatLogParser';
@@ -18,7 +19,9 @@ polka()
   .use(serve)
   .post('/uploadLog', upload.single('file'), async (req, res) => {
     const parsedLog = await parseFile(req.file.path);
-    const persistedLogs = await CombatLog.insertMany(parsedLog);
+    const logId = new mongoose.Types.ObjectId();
+    const logWithId = parsedLog.map(log => ({ ...log, logId }));
+    const persistedLogs = await CombatLog.insertMany(logWithId);
     res.end(JSON.stringify(persistedLogs));
   })
   .listen(PORT, err => {
