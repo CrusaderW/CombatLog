@@ -9,7 +9,7 @@ const ACTION_TYPE = {
 };
 
 const getPowersNames = async () => {
-  const powersDir = "./power";
+  const powersDir = "./crowfall-data/data/power";
   const powerNames = [
     // passive Toxins (see Diffusion)
     "poison toxin",
