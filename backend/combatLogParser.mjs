@@ -9,27 +9,12 @@ const ACTION_TYPE = {
 };
 
 const getPowersNames = async () => {
-  const powersDir = "./power";
+  const powersDir = "./crowfall-data/data/power";
   const powerNames = [
     // passive Toxins (see Diffusion)
     "poison toxin",
     "disease toxin",
     "nature toxin",
-
-    // class-dependent powers
-    "rapid fire",
-    "dodge",
-    "ricochet shot",
-    "block",
-    "retaliate",
-
-    // missing powers
-    "fire bolt",
-    "crushing bolt",
-    "magic breaker",
-    "arcane shot",
-    "seed banewood aura",
-    "fall",
   ];
   const powerFiles = await fsPromises.readdir(powersDir);
 
