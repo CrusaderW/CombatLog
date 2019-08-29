@@ -6,6 +6,7 @@ export const CombatLog = mongoose.model("CombatLog", mongoose.Schema({
   // user_id bigint,
   // skill_id bigint,
   // poi_id bigint
+  logId: mongoose.Schema.Types.ObjectId,
   skillAction: String,
   skillName: String,
   dateTime: Date,
