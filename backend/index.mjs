@@ -26,8 +26,13 @@ polka()
   .post('/uploadLog', upload.single('file'), async (req, res) => {
     const parsedLog = await parseFile(req.file.path);
     const logId = new mongoose.Types.ObjectId();
-    const logWithId = parsedLog.map(log => ({ ...log, logId }));
-    const persistedLogs = await CombatLog.insertMany(logWithId);
+    const enrichedLogs = parsedLog.map(log => ({
+      ...log,
+      logId,
+      username: req.body.username || null,
+      location: req.body.location || null,
+    }));
+    const persistedLogs = await CombatLog.insertMany(enrichedLogs);
     res.end(JSON.stringify(persistedLogs));
   })
   .listen(PORT, err => {

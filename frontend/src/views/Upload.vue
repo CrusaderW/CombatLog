@@ -1,13 +1,24 @@
 <template>
   <div class="upload">
     <h1>Upload page</h1>
-    <div v-if="!file">
+    <el-row :gutter="20">
+      <el-col :span="12" :offset="6">
+        <div>
+          <el-input v-model="username" placeholder="username"></el-input>
+        </div>
+        <div style="margin-top: 15px;">
+          <el-input v-model="location" placeholder="location"></el-input>
+        </div>
+      </el-col>
+    </el-row>
+
+    <div>
       <h2>Select an log file</h2>
       <input type="file" @change="onFileChange" />
-    </div>
-    <div v-else>
-      <button @click="submitFile">Send file</button>
-      <button @click="removeFile">Remove file</button>
+      <div v-if="file">
+        <button @click="submitFile">Send file</button>
+        <button @click="removeFile">Remove file</button>
+      </div>
     </div>
   </div>
 </template>
@@ -17,7 +28,9 @@ export default {
   name: "Upload",
   data() {
     return {
-      file: null
+      file: null,
+      username: "",
+      location: ""
     };
   },
   methods: {
@@ -30,6 +43,8 @@ export default {
     async submitFile() {
       const form = new FormData();
       form.append("file", this.file);
+      form.append("username", this.username);
+      form.append("location", this.location);
 
       const res = await fetch("/uploadLog", {
         method: "POST",

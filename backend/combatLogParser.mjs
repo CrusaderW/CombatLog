@@ -96,7 +96,7 @@ const getSkillTarget = (skillTargetAndSkillAmountPart) =>
 const getSkillAmount = (skillTargetAndSkillAmountPart) =>
   parseFloat(skillTargetAndSkillAmountPart.split('for')[1].trim());
 
-const parseLog = async (line, powerNames) => {
+const parseLog = async (line, powerNames, unrecognizedSkills) => {
   const skillAction = getSkillAction(line);
   if (skillAction === null) {
     console.warn('[WARN] line was skipped cause action type not defined', line)
@@ -110,6 +110,12 @@ const parseLog = async (line, powerNames) => {
   const skillTargetAndSkillAmountPart = splittedBySkillAction[1];
 
   const skillName = getSkillName(skillByAndSkillNamePart, powerNames)
+
+  if (!skillName) {
+    if (skillByAndSkillNamePart !== "Your") {
+      unrecognizedSkills.add(skillByAndSkillNamePart);
+    }
+  }
 
   return {
     skillAction,
@@ -125,5 +131,8 @@ const parseLog = async (line, powerNames) => {
 export const parseFile = async filename => {
   const powerNames = await getPowersNames();
   const logs = await fsPromises.readFile(filename, { encoding: "utf8" });
-  return Promise.all(logs.split('\n').map((log) => parseLog(log, powerNames)));
+  const unrecognizedSkills = new Set();
+  const parsedLogs = Promise.all(logs.split('\n').map((log) => parseLog(log, powerNames, unrecognizedSkills)));
+  await fsPromises.writeFile("./unrecognizedSkills.json", JSON.stringify(Array.from(unrecognizedSkills), null, 2));
+  return parsedLogs;
 };

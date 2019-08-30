@@ -66,3 +66,6 @@ backend/public
 
 #uploaded data
 backend/uploads
+
+#tmp data
+backend/unrecognizedSkills.json
