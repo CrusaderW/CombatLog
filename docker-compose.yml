@@ -13,6 +13,10 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
 
   combat_log:
-    image: combat_log
+    build: ./
+    container_name: combat_log
     restart: always
-    ports: - 8080:8080
+    ports:
+      - 8080:8080
+    links:
+      - mongo:mongo

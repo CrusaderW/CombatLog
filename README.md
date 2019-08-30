@@ -14,6 +14,6 @@ You need the following things installed:
 '''sudo docker-compose -f docker-compose.yml up'''
 
 ## runing the server
-Run once: '''docker build -t combat_log .'''
-'''docker run -it -p 8080:8080 --rm --name combat_log combat_log'''
+Run once: '''docker-compose build'''
+'''docker-compose up'''
 
