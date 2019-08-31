@@ -1,5 +1,8 @@
 # CombatLog
 
+## Important:
+Please upvote this issue if you want this project to stay alive: https://issuetracker.google.com/issues/70779807
+
 ## Prerequisites:
 You need the following things installed:
 - docker
