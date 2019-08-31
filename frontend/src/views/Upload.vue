@@ -2,24 +2,27 @@
   <div class="upload">
     <h1>Upload page</h1>
     <el-row :gutter="20">
-      <el-col :span="12" :offset="6">
+      <el-col :span="10" :offset="7">
         <div>
           <el-input v-model="username" placeholder="username"></el-input>
         </div>
         <div style="margin-top: 15px;">
           <el-input v-model="location" placeholder="location"></el-input>
         </div>
+
+        <div>
+          <h2>Select an log file</h2>
+          <el-upload :on-remove="removeFile" :http-request="submitFile">
+            <el-button size="small" type="primary">Click to upload</el-button>
+          </el-upload>
+
+          <div v-if="file">
+            <button @click="submitFile">Send file</button>
+            <button @click="removeFile">Remove file</button>
+          </div>
+        </div>
       </el-col>
     </el-row>
-
-    <div>
-      <h2>Select an log file</h2>
-      <input type="file" @change="onFileChange" />
-      <div v-if="file">
-        <button @click="submitFile">Send file</button>
-        <button @click="removeFile">Remove file</button>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -40,9 +43,9 @@ export default {
 
       this.file = event.target.files[0];
     },
-    async submitFile() {
+    async submitFile(event) {
       const form = new FormData();
-      form.append("file", this.file);
+      form.append("file", event.file);
       form.append("username", this.username);
       form.append("location", this.location);
 
