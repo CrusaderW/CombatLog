@@ -11,7 +11,7 @@ const upload = multer({ dest: "uploads/" });
 
 polka()
   .use(serve)
-  .get("/logIds", async (req, res) => {
+  .get("/logsIds", async (req, res) => {
     res.end(JSON.stringify(await CombatLog.distinct("logId")));
   })
   .get("/logsById/:logId", async (req, res) => {
