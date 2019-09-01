@@ -3,7 +3,7 @@ import polka from 'polka';
 import mongoose from 'mongoose'
 import serveStatic from 'serve-static';
 import multer from 'multer';
-import { parseFile } from './combatLogParser';
+import FileParser from './fileParser.mjs';
 import { CombatLog } from './mongo.mjs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -24,15 +24,10 @@ polka()
     res.end(JSON.stringify(await CombatLog.find({ logId: req.params.logId })));
   })
   .post('/uploadLog', upload.single('file'), async (req, res) => {
-    const parsedLog = await parseFile(req.file.path);
-    const logId = new mongoose.Types.ObjectId();
-    const enrichedLogs = parsedLog.map(log => ({
-      ...log,
-      logId,
-      username: req.body.username || null,
-      location: req.body.location || null,
-    }));
-    const persistedLogs = await CombatLog.insertMany(enrichedLogs);
+    const fileParser = new FileParser(req.file.path, req.body.location, req.body.username);
+    await fileParser.loadPowersNames();
+    await fileParser.parseFile();
+    const persistedLogs = await CombatLog.insertMany(fileParser.parsedLogs);
     res.end(JSON.stringify(persistedLogs));
   })
   .listen(PORT, err => {
