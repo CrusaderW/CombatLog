@@ -1,13 +1,19 @@
 export default class LogParser {
   static get ACTION_TYPES() {
     return {
-      HIT: 'hit',
-      HEAL: 'healed',
-      DRAIN_DODGE: 'drained',
-    }
+      HIT: "hit",
+      HEAL: "healed",
+      DRAIN_DODGE: "drained"
+    };
   }
 
-  constructor(rowLog, location, username, powerNames = [], unrecognizedSkills = []) {
+  constructor(
+    rowLog,
+    location,
+    username,
+    powerNames = [],
+    unrecognizedSkills = []
+  ) {
     this.rowLog = rowLog;
     this.location = location;
     this.username = username;
@@ -23,22 +29,34 @@ export default class LogParser {
       skillBy: this.skillBy,
       skillTarget: this.skillTarget,
       skillAmount: this.skillAmount,
-      skillCritical: this.skillCritical,
-    }
+      skillCritical: this.skillCritical
+    };
   }
 
   parse() {
     this.skillAction = this.getSkillAction();
     if (this.skillAction === null) {
-      console.warn('[WARN] line was skipped cause action type not defined', this.rowLog)
-      this.error = { msg: '[WARN] line was skipped cause action type not defined', row: this.rowLog };
+      console.warn(
+        "[WARN] line was skipped cause action type not defined",
+        this.rowLog
+      );
+      this.error = {
+        msg: "[WARN] line was skipped cause action type not defined",
+        row: this.rowLog
+      };
       return;
     }
 
-    const eventPart = this.rowLog.split("Event=[")[1].trim().slice(0, -1);
-    const [skillByAndSkillNamePart, skillTargetAndSkillAmountPart] = this.getSplittedBySkillAction(eventPart);
+    const eventPart = this.rowLog
+      .split("Event=[")[1]
+      .trim()
+      .slice(0, -1);
+    const [
+      skillByAndSkillNamePart,
+      skillTargetAndSkillAmountPart
+    ] = this.getSplittedBySkillAction(eventPart);
 
-    this.skillName = this.getSkillName(skillByAndSkillNamePart)
+    this.skillName = this.getSkillName(skillByAndSkillNamePart);
 
     if (!this.skillName && skillByAndSkillNamePart !== "Your") {
       this.unrecognizedSkills.add(skillByAndSkillNamePart);
@@ -73,7 +91,10 @@ export default class LogParser {
   }
 
   getSkillName(skillByAndSkillNamePart) {
-    const splitted = skillByAndSkillNamePart.trim().split(' ').reverse();
+    const splitted = skillByAndSkillNamePart
+      .trim()
+      .split(" ")
+      .reverse();
     if (splitted.length === 1) {
       return null;
     }
@@ -85,32 +106,33 @@ export default class LogParser {
         return skillName;
       }
 
-      skillName = `${splitted[ind]} ${skillName}`
+      skillName = `${splitted[ind]} ${skillName}`;
     }
 
     return this.powerNames.includes(skillName.toLowerCase()) ? skillName : null;
   }
 
   getDateTime() {
-    return new Date(this.rowLog.split(' ')[0]);
+    return new Date(this.rowLog.split(" ")[0]);
   }
 
   getSkillBy(skillByAndSkillNamePart) {
-    return this.skillName ?
-      skillByAndSkillNamePart.slice(0, skillByAndSkillNamePart.indexOf(this.skillName)).trim() :
-      skillByAndSkillNamePart.trim();
+    return this.skillName
+      ? skillByAndSkillNamePart
+          .slice(0, skillByAndSkillNamePart.indexOf(this.skillName))
+          .trim()
+      : skillByAndSkillNamePart.trim();
   }
 
   getSkillTarget(skillTargetAndSkillAmountPart) {
-    return skillTargetAndSkillAmountPart.split('for')[0].trim();
+    return skillTargetAndSkillAmountPart.split("for")[0].trim();
   }
 
   getSkillAmount(skillTargetAndSkillAmountPart) {
-    return parseFloat(skillTargetAndSkillAmountPart.split('for')[1].trim());
+    return parseFloat(skillTargetAndSkillAmountPart.split("for")[1].trim());
   }
 
   isCritical(eventPart) {
-    return eventPart.includes('(Critical)');
+    return eventPart.includes("(Critical)");
   }
-
 }
