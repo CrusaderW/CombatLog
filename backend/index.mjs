@@ -18,11 +18,11 @@ polka()
     res.end(JSON.stringify(await CombatLog.find({ logId: req.params.logId })));
   })
   .post("/uploadLog", upload.single("file"), async (req, res) => {
-    const fileParser = new FileParser(
-      req.file.path,
-      req.body.location,
-      req.body.username
-    );
+    const fileParser = new FileParser({
+      filepath: req.file.path,
+      location: req.body.location,
+      username: req.body.username
+    });
     await fileParser.loadPowersNames();
     await fileParser.parseFile();
     const persistedLogs = await CombatLog.insertMany(fileParser.parsedLogs);

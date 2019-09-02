@@ -1,3 +1,4 @@
 module.exports = {
-  outputDir: "../backend/public"
+  outputDir: '../backend/public',
+  publicPath: ''
 };

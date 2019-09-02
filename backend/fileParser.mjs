@@ -1,15 +1,16 @@
 import mongoose from "mongoose";
 import fs from "fs";
 import LogParser from "./logParser.mjs";
+import Fight from "./fight.mjs";
 
 const fsPromises = fs.promises;
 
 export default class FileParser {
-  constructor(
+  constructor({
     filepath,
     location,
     username,
-    logId,
+    logId = new mongoose.Types.ObjectId(),
     powersPath = "./crowfall-data/data/power",
     savePowersNames = false,
     saveUrecognizedSkills = true,
@@ -18,8 +19,9 @@ export default class FileParser {
       "poison toxin",
       "disease toxin",
       "nature toxin"
-    ]
-  ) {
+    ],
+    fightsThreshold = 1000 * 5 * 60
+  }) {
     this.filepath = filepath;
     this.powersPath = powersPath;
     this.powerNames = predefinedPowers;
@@ -28,7 +30,8 @@ export default class FileParser {
     this.parsedLogs = [];
     this.location = location;
     this.username = username;
-    this.logId = logId || new mongoose.Types.ObjectId();
+    this.logId = logId;
+    this.fightsThreshold = fightsThreshold;
   }
 
   async parseFile() {
@@ -53,6 +56,45 @@ export default class FileParser {
         JSON.stringify(Array.from(unrecognizedSkills), null, 2)
       );
     }
+  }
+
+  // method not ready, work in progress
+  async splitByFights() {
+    if (!this.parsedLogs.length) {
+      console.warn("try to split by fights but parsed logs are empty");
+      return;
+    }
+
+    this.parsedLogs = this.parsedLogs.map(log => ({
+      ...log,
+      dateTime: new Date(log.dateTime)
+    }));
+
+    const fights = [];
+    let currentFight = new Fight(this.parsedLogs[0].dateTime);
+    for (let ii = 0; ii < this.parsedLogs.length; ii++) {
+      const log = this.parsedLogs[ii];
+      // const dateDelta = log.dateTime.getTime() - currentFight.datetimeEnd.getTime();
+      // if (dateDelta < this.fightsThreshold) {
+      if (
+        log.dateTime.getTime() - currentFight.datetimeEnd.getTime() <
+          this.fightsThreshold &&
+        currentFight.datetimeStart.getTime() - log.dateTime.getTime() <
+          this.fightsThreshold
+      ) {
+        currentFight.addLog(log);
+      } else {
+        fights.push(currentFight);
+        currentFight = new Fight(log.dateTime);
+      }
+    }
+    console.log(
+      fights.map(
+        fight =>
+          `${fight.datetimeStart} - ${fight.datetimeEnd} - ${fight.logs.length}`
+      )
+    );
+    return fights;
   }
 
   async loadPowersNames() {
