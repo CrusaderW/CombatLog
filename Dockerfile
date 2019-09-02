@@ -4,6 +4,8 @@ FROM node:lts-alpine
 
 # make the 'app' folder the current working directory
 WORKDIR /app
+RUN git submodule update --init
+RUN node powersLoader.js
 
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY ./frontend ./frontend

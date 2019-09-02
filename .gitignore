@@ -69,3 +69,7 @@ backend/uploads
 
 #tmp data
 backend/unrecognizedSkills.json
+
+#powerList
+backend/powerNames.json
+frontend/src/powerNames.json
