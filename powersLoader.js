@@ -8,7 +8,12 @@ const outputPaths = [
 
 (async () => {
   const powerFiles = await fs.readdir(powersPath);
-  const powerNames = [];
+  const powerNames = [
+    // passive Toxins (see Diffusion)
+    "poison toxin",
+    "disease toxin",
+    "nature toxin"
+  ];
   await Promise.all(
     powerFiles.map(async powerFile => {
       const path = `${powersPath}/${powerFile}`;
