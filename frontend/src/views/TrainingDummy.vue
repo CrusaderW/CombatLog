@@ -1,18 +1,20 @@
 <template>
   <div>
     <h1>Training Dummy page</h1>
-    <el-row :gutter="20">
-      <el-col :span="10" :offset="7">
-        <div>
-          <el-input v-model="username" placeholder="username"></el-input>
-        </div>
-        <div style="margin-top: 15px;">
-          <el-input v-model="location" placeholder="location"></el-input>
-        </div>
 
+    <bar-with-table v-if="hits" :logs="hits" backgroundColor="#f87979" label="Damage" />
+    <bar-with-table v-if="heals" :logs="heals" backgroundColor="#78f979" label="Heal" />
+
+    <el-row v-if="!logs.length" :gutter="20">
+      <el-col :span="10" :offset="7">
         <div style="margin-top: 15px;">
           <h2>Select an log file</h2>
-          <el-upload :on-remove="removeFile" :on-change="onFileChange" :auto-upload="false">
+          <el-upload
+            action="tmp"
+            :on-remove="removeFile"
+            :on-change="onFileChange"
+            :auto-upload="false"
+          >
             <el-button slot="trigger" size="small" type="primary">Choose log file</el-button>
           </el-upload>
         </div>
@@ -22,17 +24,87 @@
 </template>
 
 <script>
+import BarWithTable from "../components/BarWithTable.vue";
 import LogParser from "../logParser";
 import POWER_NAMES from "../powerNames.json";
 
+const getData = (logs, skillAction, { skillBy = null, skillTarget = null }) => {
+  let startDate = null;
+  let endDate = null;
+  const logsBySkillNames = logs
+    .filter(log => log.skillName && log.dateTime && log.skillAmount)
+    .filter(log => log.skillAction === skillAction)
+    .filter(log => (skillBy ? log.skillBy === skillBy : true))
+    .filter(log => (skillTarget ? log.skillTarget === skillTarget : true))
+    .map(log => ({ ...log, dateTime: log.dateTime.getTime() }))
+    .reduce((groupedLogs, log) => {
+      const accumulatedLog = groupedLogs[log.skillName] || {};
+
+      startDate = startDate || log.dateTime;
+      if (log.dateTime < startDate) {
+        startDate = log.dateTime;
+      }
+
+      endDate = endDate || log.dateTime;
+      if (log.dateTime > endDate) {
+        endDate = log.dateTime;
+      }
+
+      const skillAmount = (+accumulatedLog.skillAmount || 0) + +log.skillAmount;
+
+      return {
+        ...groupedLogs,
+        [log.skillName]: {
+          skillName: log.skillName,
+          skillAmount,
+          count: (+accumulatedLog.count || 0) + 1,
+          critCount: (+accumulatedLog.critCount || 0) + +log.skillCritical
+        }
+      };
+    }, {});
+
+  return Object.values(logsBySkillNames)
+    .map(log => ({
+      ...log,
+      perSecond: (log.skillAmount / ((endDate - startDate) / 1000)).toFixed()
+    }))
+    .sort((a, b) => b.skillAmount - a.skillAmount);
+};
+
 export default {
   name: "Upload",
+  components: { BarWithTable },
   data() {
     return {
       file: null,
       username: "",
       location: "",
-      logs: []
+      hits: [],
+      heals: [],
+      logs: [],
+      data2: {
+        labels: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December"
+        ],
+        datasets: [
+          {
+            label: "Data One",
+            backgroundColor: "#f87979",
+            data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
+          }
+        ]
+      }
     };
   },
   methods: {
@@ -49,10 +121,30 @@ export default {
         return logParser.getDBData();
       });
 
-      console.log(this.logs);
+      this.hits = getData(this.logs, LogParser.ACTION_TYPES.HIT, {
+        skillBy: "Your"
+      });
+      this.heals = getData(this.logs, LogParser.ACTION_TYPES.HEAL, {
+        skillTarget: "You"
+      });
     },
+
     removeFile() {
       this.file = null;
+    }
+  },
+  computed: {
+    dataset: function() {
+      return {
+        labels: this.logs.map(log => log.skillName),
+        datasets: [
+          {
+            label: "Damage",
+            backgroundColor: "#f87979",
+            data: this.logs.map(log => log.skillAmount)
+          }
+        ]
+      };
     }
   }
 };

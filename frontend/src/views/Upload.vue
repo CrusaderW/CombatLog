@@ -12,7 +12,12 @@
 
         <div>
           <h2>Select an log file</h2>
-          <el-upload :on-remove="removeFile" :on-change="onFileChange" :auto-upload="false">
+          <el-upload
+            action="tmp"
+            :on-remove="removeFile"
+            :on-change="onFileChange"
+            :auto-upload="false"
+          >
             <el-button slot="trigger" size="small" type="primary">Choose log file</el-button>
             <el-button v-show="file" size="small" type="success" @click="submitFile">Upload</el-button>
           </el-upload>

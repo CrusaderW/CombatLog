@@ -28,7 +28,7 @@ export default class LogParser {
       dateTime: this.dateTime,
       skillBy: this.skillBy,
       skillTarget: this.skillTarget,
-      skillAmount: this.skillAmount,
+      skillAmount: +this.skillAmount,
       skillCritical: this.skillCritical,
       username: this.username,
       location: this.location
@@ -121,8 +121,8 @@ export default class LogParser {
   getSkillBy(skillByAndSkillNamePart) {
     return this.skillName
       ? skillByAndSkillNamePart
-          .slice(0, skillByAndSkillNamePart.indexOf(this.skillName))
-          .trim()
+        .slice(0, skillByAndSkillNamePart.indexOf(this.skillName))
+        .trim()
       : skillByAndSkillNamePart.trim();
   }
 
