@@ -16,9 +16,14 @@ export default new Router({
       component: () => import("./views/Logs.vue")
     },
     {
+      path: "/commingsoon",
+      name: "commingSoon",
+      component: () => import("./views/CommingSoon.vue")
+    },
+    {
       path: "/",
       name: "trainingDummy",
       component: () => import("./views/TrainingDummy.vue")
-    }
+    },
   ]
 });
