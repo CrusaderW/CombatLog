@@ -121,8 +121,8 @@ export default class LogParser {
   getSkillBy(skillByAndSkillNamePart) {
     return this.skillName
       ? skillByAndSkillNamePart
-        .slice(0, skillByAndSkillNamePart.indexOf(this.skillName))
-        .trim()
+          .slice(0, skillByAndSkillNamePart.indexOf(this.skillName))
+          .trim()
       : skillByAndSkillNamePart.trim();
   }
 
