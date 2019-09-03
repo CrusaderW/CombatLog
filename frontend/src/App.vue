@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/upload">Upload</router-link>
+      <router-link to="/commingsoon">Upload</router-link>
       {{" | "}}
-      <router-link to="/logs">Logs</router-link>
+      <router-link to="/commingsoon">Logs</router-link>
       {{" | "}}
       <router-link to="/">Training Dummy</router-link>
     </div>
@@ -12,8 +12,9 @@
 </template>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Asul');
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: "Asul", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
