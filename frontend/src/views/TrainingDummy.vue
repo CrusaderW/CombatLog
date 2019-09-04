@@ -109,10 +109,13 @@ export default {
       });
     },
     async onFileChange(file, fileList) {
-      console.log(file);
-      this.uploadFiletoS3(file.raw);
+      this.file = await (() =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.readAsText(file.raw);
+        }))();
 
-      this.file = await file.raw.text();
       this.logs = this.file.split("\n").map(log => {
         const logParser = new LogParser(
           log,
