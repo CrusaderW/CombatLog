@@ -28,7 +28,6 @@ import AWS from "aws-sdk";
 import BarWithTable from "../components/BarWithTable.vue";
 import LogParser from "../logParser";
 import POWER_NAMES from "../powerNames.json";
-import awsKey from "../key.json";
 
 AWS.config.update({
   accessKeyId: "-",
