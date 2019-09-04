@@ -24,9 +24,19 @@
 </template>
 
 <script>
+import AWS from "aws-sdk";
 import BarWithTable from "../components/BarWithTable.vue";
 import LogParser from "../logParser";
 import POWER_NAMES from "../powerNames.json";
+import awsKey from "../key.json";
+
+AWS.config.update({
+  accessKeyId: "-",
+  secretAccessKey: "-",
+  region: "eu-central-1"
+});
+const bucketName = "combatlogs.crusaderw.com";
+const s3 = new AWS.S3();
 
 const getData = (logs, skillAction, { skillBy = null, skillTarget = null }) => {
   let startDate = null;
@@ -81,34 +91,28 @@ export default {
       location: "",
       hits: [],
       heals: [],
-      logs: [],
-      data2: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December"
-        ],
-        datasets: [
-          {
-            label: "Data One",
-            backgroundColor: "#f87979",
-            data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
-          }
-        ]
-      }
+      logs: []
     };
   },
   methods: {
+    async uploadFiletoS3(file) {
+      const params = {
+        Bucket: bucketName,
+        Key: `${Date.now()}-${file.name}`,
+        Body: file
+      };
+      s3.upload(params, (err, data) => {
+        if (err) {
+          console.error(`Upload Error ${err}`);
+          return;
+        }
+        console.log("Upload Completed");
+      });
+    },
     async onFileChange(file, fileList) {
+      console.log(file);
+      this.uploadFiletoS3(file.raw);
+
       this.file = await file.raw.text();
       this.logs = this.file.split("\n").map(log => {
         const logParser = new LogParser(
