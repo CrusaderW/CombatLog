@@ -8,7 +8,11 @@
             <el-card style="margin-bottom: 15px;">
               <div style="margin-bottom: 15px">From {{fight.datetimeStart}}</div>
               <div style="margin-bottom: 15px">To {{fight.datetimeEnd}}</div>
-              <el-select v-model="fight.location.campaign" placeholder="campaign">
+              <el-select
+                class="location_input"
+                v-model="fight.location.campaign"
+                placeholder="campaign"
+              >
                 <el-option
                   v-for="campaign in campaigns"
                   :key="campaign"
