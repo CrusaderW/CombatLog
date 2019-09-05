@@ -1,0 +1,21 @@
+  rAppFargateSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${pAppName}-${pEnvironment} ECS Security Group'
+      VpcId: !Ref pVpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          SourceSecurityGroupId: !Ref rAppAlbSecurityGroup
+
+  rMongoDbEc2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${pAppName}-${pEnvironment} MongoDb Security Group'
+      VpcId: !Ref pVpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 27017
+          ToPort: 27017
+          SourceSecurityGroupId: !Ref rAppFargateSecurityGroup
