@@ -1,8 +1,25 @@
 import mongoose from "mongoose";
 
+// mongoose.connect("mongodb://root:example@localhost:27017/admin", {
 mongoose.connect("mongodb://root:example@mongo:27017/admin", {
   useNewUrlParser: true
 });
+
+export const Fight = mongoose.model(
+  "Fight",
+  mongoose.Schema({
+    logs: Array,
+    location: {
+      campaign: String,
+      zone: String,
+      POI: String
+    },
+    datetimeStart: Date,
+    datetimeEnd: Date,
+    teams: [[String]],
+    published: Boolean
+  })
+);
 
 export const CombatLog = mongoose.model(
   "CombatLog",
@@ -22,6 +39,7 @@ export const CombatLog = mongoose.model(
     skillBy: String,
     skillTarget: String,
     skillAmount: Number,
-    skillCritical: Boolean
+    skillCritical: Boolean,
+    syncronized: Boolean
   })
 );
