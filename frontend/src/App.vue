@@ -5,6 +5,8 @@
       {{" | "}}
       <router-link to="/commingsoon">Logs</router-link>
       {{" | "}}
+      <router-link to="/fights">Fights</router-link>
+      {{" | "}}
       <router-link to="/">Training Dummy</router-link>
     </div>
     <router-view />

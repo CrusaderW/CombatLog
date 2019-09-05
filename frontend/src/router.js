@@ -16,6 +16,11 @@ export default new Router({
       component: () => import("./views/Logs.vue")
     },
     {
+      path: "/fights",
+      name: "fightsPage",
+      component: () => import("./views/Fights.vue")
+    },
+    {
       path: "/commingsoon",
       name: "commingSoon",
       component: () => import("./views/CommingSoon.vue")
@@ -24,6 +29,6 @@ export default new Router({
       path: "/",
       name: "trainingDummy",
       component: () => import("./views/TrainingDummy.vue")
-    },
+    }
   ]
 });

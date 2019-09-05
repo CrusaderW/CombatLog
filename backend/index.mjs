@@ -65,6 +65,15 @@ polka()
     );
     res.end(JSON.stringify(updatedFights));
   })
+  .post("/updateLocation", async (req, res) => {
+    res.end(
+      JSON.stringify(
+        (await Fight.findByIdAndUpdate(req.body._id, {
+          location: req.body.location
+        })).location
+      )
+    );
+  })
   .listen(PORT, err => {
     if (err) throw err;
     console.log(`> Running on localhost:${PORT}`);
