@@ -3,20 +3,30 @@
     <h1>Upload page</h1>
     <el-row :gutter="20">
       <el-col :span="10" :offset="7">
-        <div>
-          <el-input v-model="username" placeholder="username"></el-input>
-        </div>
-
         <div v-if="fights" style="margin-top: 15px;">
           <div v-for="fight in fights" v-bind:key="fight._id">
-            From {{fight.datetimeStart}} to {{fight.datetimeEnd}}
-            <el-input v-model="fight.location.campaign" placeholder="Campaign"></el-input>
-            <el-input v-model="fight.location.zone" placeholder="Zone"></el-input>
-            <el-input v-model="fight.location.POI" placeholder="POI"></el-input>
+            <el-card style="margin-bottom: 15px;">
+              <div style="margin-bottom: 15px">From {{fight.datetimeStart}}</div>
+              <div style="margin-bottom: 15px">To {{fight.datetimeEnd}}</div>
+              <el-select v-model="fight.location.campaign" placeholder="campaign">
+                <el-option
+                  v-for="campaign in campaigns"
+                  :key="campaign"
+                  :label="campaign"
+                  :value="campaign"
+                ></el-option>
+              </el-select>
+              <el-input class="location_input" v-model="fight.location.zone" placeholder="Zone"></el-input>
+              <el-input class="location_input" v-model="fight.location.POI" placeholder="POI"></el-input>
+            </el-card>
           </div>
           <el-button size="small" type="primary" @click="saveFights">Save Fights</el-button>
         </div>
+
         <div v-show="!fights" style="margin-top: 15px;">
+          <div>
+            <el-input v-model="username" placeholder="username"></el-input>
+          </div>
           <h2>Select an log file</h2>
           <el-upload
             action="tmp"
@@ -39,6 +49,13 @@
   </div>
 </template>
 
+<style>
+.location_input {
+  width: 150px;
+  margin-left: 15px;
+}
+</style>
+
 <script>
 export default {
   name: "Upload",
@@ -46,12 +63,13 @@ export default {
     return {
       file: null,
       username: "",
+      campaigns: ["PvP Training", "Trial of Arkon EU", "Trial of Gaea EU"],
       fights: null,
       locations: {}
     };
   },
   methods: {
-    onFileChange(file, fileList) {
+    onFileChange(file) {
       this.file = file.raw;
     },
     async submitFile() {
