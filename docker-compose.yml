@@ -17,7 +17,7 @@ services:
     container_name: combat_log
     restart: always
     ports:
-      - 8080:8080
+      - ${PORT}:${PORT}
     links:
       - mongo
     volumes:

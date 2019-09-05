@@ -16,5 +16,6 @@ RUN npm run build
 WORKDIR /app/backend
 RUN npm install
 
-EXPOSE 8080
+ENV PORT=80
+EXPOSE ${PORT}
 CMD ["npm", "start"]
