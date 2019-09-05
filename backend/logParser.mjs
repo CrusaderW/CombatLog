@@ -1,18 +1,19 @@
-export default class LogParser {
-  static get ACTION_TYPES() {
-    return {
-      HIT: "hit",
-      HEAL: "healed",
-      DRAIN_DODGE: "drained"
-    };
-  }
+import {
+  ACTION_TYPES,
+  ACTION_TYPES_PARSING,
+  SKILL_BY_ME,
+  FOR_SPLITTER,
+  EVENT_SPLITTER,
+  CRITICAL_SUBSTRING
+} from "./constants.mjs";
 
+export default class LogParser {
   constructor(
     rowLog,
     location,
     username,
     powerNames = [],
-    unrecognizedSkills = []
+    unrecognizedSkills = new Set()
   ) {
     this.rowLog = rowLog;
     this.location = location;
@@ -28,8 +29,10 @@ export default class LogParser {
       dateTime: this.dateTime,
       skillBy: this.skillBy,
       skillTarget: this.skillTarget,
-      skillAmount: this.skillAmount,
-      skillCritical: this.skillCritical
+      skillAmount: +this.skillAmount,
+      skillCritical: this.skillCritical,
+      username: this.username,
+      location: this.location
     };
   }
 
@@ -48,7 +51,7 @@ export default class LogParser {
     }
 
     const eventPart = this.rowLog
-      .split("Event=[")[1]
+      .split(EVENT_SPLITTER)[1]
       .trim()
       .slice(0, -1);
     const [
@@ -58,7 +61,7 @@ export default class LogParser {
 
     this.skillName = this.getSkillName(skillByAndSkillNamePart);
 
-    if (!this.skillName && skillByAndSkillNamePart !== "Your") {
+    if (!this.skillName && skillByAndSkillNamePart !== SKILL_BY_ME) {
       this.unrecognizedSkills.add(skillByAndSkillNamePart);
     }
 
@@ -71,23 +74,25 @@ export default class LogParser {
 
   getSkillAction() {
     // order is importans because of "hit points" substring
-    if (this.rowLog.includes(LogParser.ACTION_TYPES.HEAL)) {
-      return LogParser.ACTION_TYPES.HEAL;
+    if (this.rowLog.includes(ACTION_TYPES_PARSING.HEAL)) {
+      return ACTION_TYPES.HEAL;
     }
 
-    if (this.rowLog.includes(LogParser.ACTION_TYPES.DRAIN_DODGE)) {
-      return LogParser.ACTION_TYPES.DRAIN_DODGE;
+    if (this.rowLog.includes(ACTION_TYPES_PARSING.DRAIN_DODGE)) {
+      return ACTION_TYPES.DRAIN_DODGE;
     }
 
-    if (this.rowLog.includes(LogParser.ACTION_TYPES.HIT)) {
-      return LogParser.ACTION_TYPES.HIT;
+    if (this.rowLog.includes(ACTION_TYPES_PARSING.HIT)) {
+      return ACTION_TYPES.HIT;
     }
 
     return null;
   }
 
   getSplittedBySkillAction(eventPart) {
-    return eventPart.split(this.skillAction).map(part => part.trim());
+    return eventPart
+      .split(ACTION_TYPES_PARSING[this.skillAction])
+      .map(part => part.trim());
   }
 
   getSkillName(skillByAndSkillNamePart) {
@@ -125,14 +130,16 @@ export default class LogParser {
   }
 
   getSkillTarget(skillTargetAndSkillAmountPart) {
-    return skillTargetAndSkillAmountPart.split("for")[0].trim();
+    return skillTargetAndSkillAmountPart.split(FOR_SPLITTER)[0].trim();
   }
 
   getSkillAmount(skillTargetAndSkillAmountPart) {
-    return parseFloat(skillTargetAndSkillAmountPart.split("for")[1].trim());
+    return parseFloat(
+      skillTargetAndSkillAmountPart.split(FOR_SPLITTER)[1].trim()
+    );
   }
 
   isCritical(eventPart) {
-    return eventPart.includes("(Critical)");
+    return eventPart.includes(CRITICAL_SUBSTRING);
   }
 }

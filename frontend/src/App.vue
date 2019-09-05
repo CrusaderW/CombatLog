@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/commingsoon">Upload</router-link>
+      <router-link to="/upload">Upload</router-link>
       {{" | "}}
       <router-link to="/commingsoon">Logs</router-link>
       {{" | "}}
@@ -12,7 +12,7 @@
 </template>
 
 <style>
-@import url('https://fonts.googleapis.com/css?family=Asul');
+@import url("https://fonts.googleapis.com/css?family=Asul");
 #app {
   font-family: "Asul", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

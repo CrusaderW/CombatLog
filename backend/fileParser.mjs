@@ -47,7 +47,9 @@ export default class FileParser {
           unrecognizedSkills
         );
         logParser.parse();
-        this.parsedLogs.push(logParser.getDBData());
+        if (!logParser.error) {
+          this.parsedLogs.push(logParser.getDBData());
+        }
       })
     );
     if (this.saveUrecognizedSkills) {
