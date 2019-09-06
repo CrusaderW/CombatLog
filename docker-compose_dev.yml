@@ -1,0 +1,35 @@
+# Use root/example as user/password credentials
+version: '3'
+
+services:
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: ecs-crusaderw
+        awslogs-region: eu-central-1
+        awslogs-stream-prefix: mongo-db
+#    volumes:
+#      - mongostore:/var/lib/combat_log_mongo
+
+  combat_log:
+    build: ./
+    image: 100256065505.dkr.ecr.eu-central-1.amazonaws.com/combat_log:latest
+    ports:
+      - 80:80
+#    volumes:
+#      - combat_log_data:/var/lib/combat_log
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: ecs-crusaderw
+        awslogs-region: eu-central-1
+        awslogs-stream-prefix: combat_log
+
+#volumes:
+#  combat_log_data:
