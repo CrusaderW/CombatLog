@@ -16,7 +16,7 @@ You need the following things installed:
 `git submodule update --remote`
 
 ## runing the server
-Run once: `docker-compose build`
+Run once: `docker-compose -f docker-compose_dev.yml build`
 
-`docker-compose up`
+`docker-compose -f docker-compose_dev.yml up`
 
