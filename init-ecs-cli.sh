@@ -8,3 +8,4 @@ aws iam --region eu-central-1 attach-role-policy --role-name ecsTaskExecutionRol
 ecs-cli up --cluster combatLog
 aws ec2 create-security-group --group-name "crusaderwCom-sg" --description "My CrusaderW security group" --vpc-id "vpc-0a848352d9de1ecb3"
 aws ec2 authorize-security-group-ingress --group-id "sg-0998fddd5a8f96cf3" --protocol tcp --port 80 --cidr 0.0.0.0/0
+ecs-cli compose --project-name ecs_combatLog service up --create-log-groups --cluster-config combatLog --cluster combatLog
