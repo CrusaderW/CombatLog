@@ -14,3 +14,16 @@ run_params:
       security_groups:
         - "sg-06abfdcbd565d851b"
       assign_public_ip: ENABLED
+libstorage:
+  # The libstorage.service property directs a libStorage client to direct its
+  # requests to the given service by default. It is not used by the server.
+  service: ebs
+  server:
+    services:
+      ebs:
+        driver: ebs
+        ebs:
+          accessKey:      XXXXXXXXXX
+          secretKey:      XXXXXXXXXX
+          region:         eu-central-1
+					volumePath:     /var/lib/mongodb
