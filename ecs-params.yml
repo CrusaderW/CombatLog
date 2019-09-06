@@ -1,0 +1,16 @@
+version: 1
+task_definition:
+  task_execution_role: ecsTaskExecutionRole
+  ecs_network_mode: awsvpc
+  task_size:
+    mem_limit: 1GB
+    cpu_limit: 256
+run_params:
+  network_configuration:
+    awsvpc_configuration:
+      subnets:
+        - "subnet-0b06bf2051713f8b4"
+        - "subnet-0f7a1df29bc15242e"
+      security_groups:
+        - "sg-06abfdcbd565d851b"
+      assign_public_ip: ENABLED
