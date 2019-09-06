@@ -21,7 +21,7 @@ services:
     build: ./
     image: 100256065505.dkr.ecr.eu-central-1.amazonaws.com/combat_log:latest
     ports:
-      - ${PORT}:${PORT}
+      - 80:80
 #    volumes:
 #      - combat_log_data:/var/lib/combat_log
     logging:
