@@ -3,9 +3,11 @@ import polka from "polka";
 import serveStatic from "serve-static";
 import multer from "multer";
 import bodyParser from "body-parser";
+import cors from "cors";
 import LogParser from "./logParser.mjs";
 import LogsSplitter from "./logsSplitter.mjs";
 import { CombatLog, Fight } from "./mongo.mjs";
+import { getRelatedFights } from "./queries.mjs";
 import POWER_NAMES from "./powerNames.json";
 
 const fsPromises = fs.promises;
@@ -16,6 +18,7 @@ const serve = serveStatic("./public");
 const upload = multer({ dest: "uploads/" });
 
 polka()
+  .use(cors())
   .use(serve)
   .use(bodyParser.json())
   .get("/logsIds", async (req, res) => {
@@ -55,6 +58,12 @@ polka()
     res.end(JSON.stringify(persistedFights));
   })
   .post("/saveFights", async (req, res) => {
+    const { _id } = req.body.locations[0];
+
+    // TODO: fights should be merged
+    const relatedFights = await getRelatedFights(_id);
+    console.log(relatedFights);
+
     const updatedFights = await Fight.bulkWrite(
       req.body.locations.map(({ _id, location }) => ({
         updateOne: {
@@ -68,9 +77,13 @@ polka()
   .post("/updateLocation", async (req, res) => {
     res.end(
       JSON.stringify(
-        (await Fight.findByIdAndUpdate(req.body._id, {
-          location: req.body.location
-        })).location
+        (await Fight.findByIdAndUpdate(
+          req.body._id,
+          {
+            location: req.body.location
+          },
+          { new: true }
+        )).location
       )
     );
   })

@@ -23,16 +23,19 @@ export default {
   },
   methods: {
     async updateLocation() {
-      this.fight.location = await fetch("./updateLocation", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json"
-        },
-        body: JSON.stringify({
-          _id: this.fight._id,
-          location: this.fight.location
-        })
-      });
+      this.fight.location = await fetch(
+        "http://localhost:8080/updateLocation",
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json"
+          },
+          body: JSON.stringify({
+            _id: this.fight._id,
+            location: this.fight.location
+          })
+        }
+      );
     }
   }
 };
