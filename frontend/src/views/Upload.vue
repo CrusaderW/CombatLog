@@ -81,7 +81,7 @@ export default {
       form.append("file", this.file);
       form.append("username", this.username);
 
-      const res = await fetch("/uploadLog", {
+      const res = await fetch("http://localhost:8080/uploadLog", {
         method: "POST",
         body: form
       });
@@ -92,7 +92,7 @@ export default {
       console.log(this.fights);
     },
     async saveFights() {
-      const res = await fetch("/saveFights", {
+      const res = await fetch("http://localhost:8080/saveFights", {
         method: "POST",
         headers: {
           "content-type": "application/json"

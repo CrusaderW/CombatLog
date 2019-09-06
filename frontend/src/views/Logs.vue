@@ -51,18 +51,22 @@ export default {
   methods: {
     async loadLogsIds() {
       try {
-        this.logsIds = await (await fetch("/logsIds")).json();
+        this.logsIds = await (await fetch(
+          "http://localhost:8080/logsIds"
+        )).json();
       } catch (err) {
         this.error = "cannot load logsIds";
-        log.error("cannot load logsIds", err);
+        console.error("cannot load logsIds", err);
       }
     },
     async loadLogs() {
       try {
-        this.logs = await (await fetch(`/logsById/${this.logsId}`)).json();
+        this.logs = await (await fetch(
+          `http://localhost:8080/logsById/${this.logsId}`
+        )).json();
       } catch (err) {
         this.error = "cannot load logs";
-        log.error("cannot load logs", err);
+        console.error("cannot load logs", err);
       }
     }
   }

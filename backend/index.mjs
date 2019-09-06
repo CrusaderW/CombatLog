@@ -3,6 +3,7 @@ import polka from "polka";
 import serveStatic from "serve-static";
 import multer from "multer";
 import bodyParser from "body-parser";
+import cors from "cors";
 import LogParser from "./logParser.mjs";
 import LogsSplitter from "./logsSplitter.mjs";
 import { CombatLog, Fight } from "./mongo.mjs";
@@ -17,6 +18,7 @@ const serve = serveStatic("./public");
 const upload = multer({ dest: "uploads/" });
 
 polka()
+  .use(cors())
   .use(serve)
   .use(bodyParser.json())
   .get("/logsIds", async (req, res) => {
