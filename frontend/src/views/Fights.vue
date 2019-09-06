@@ -35,7 +35,7 @@ export default {
   },
   async mounted() {
     this.fights = await (await fetch(
-      "http://localhost:8080/lastFights"
+      "/lastFights"
     )).json();
   },
   updateLocation() {}

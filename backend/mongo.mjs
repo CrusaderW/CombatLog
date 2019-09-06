@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-mongoose.connect("mongodb://root:example@localhost:27017/admin", {
+mongoose.connect("mongodb://root:example@mongo:27017/admin", {
   useNewUrlParser: true
 });
 

@@ -62,7 +62,7 @@ export default {
     async loadLogs() {
       try {
         this.logs = await (await fetch(
-          `http://localhost:8080/logsById/${this.logsId}`
+          "/logsById/${this.logsId}"
         )).json();
       } catch (err) {
         this.error = "cannot load logs";

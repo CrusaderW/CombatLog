@@ -24,7 +24,7 @@ export default {
   methods: {
     async updateLocation() {
       this.fight.location = await fetch(
-        "http://localhost:8080/updateLocation",
+        "/updateLocation",
         {
           method: "POST",
           headers: {
