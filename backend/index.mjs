@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import LogParser from "./logParser.mjs";
 import LogsSplitter from "./logsSplitter.mjs";
 import { CombatLog, Fight } from "./mongo.mjs";
+import { getRelatedFights } from "./queries.mjs";
 import POWER_NAMES from "./powerNames.json";
 
 const fsPromises = fs.promises;
@@ -55,6 +56,12 @@ polka()
     res.end(JSON.stringify(persistedFights));
   })
   .post("/saveFights", async (req, res) => {
+    const { _id } = req.body.locations[0];
+
+    // TODO: fights should be merged
+    const relatedFights = await getRelatedFights(_id);
+    console.log(relatedFights);
+
     const updatedFights = await Fight.bulkWrite(
       req.body.locations.map(({ _id, location }) => ({
         updateOne: {
@@ -68,9 +75,13 @@ polka()
   .post("/updateLocation", async (req, res) => {
     res.end(
       JSON.stringify(
-        (await Fight.findByIdAndUpdate(req.body._id, {
-          location: req.body.location
-        })).location
+        (await Fight.findByIdAndUpdate(
+          req.body._id,
+          {
+            location: req.body.location
+          },
+          { new: true }
+        )).location
       )
     );
   })

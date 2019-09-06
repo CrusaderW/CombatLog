@@ -1,25 +1,17 @@
-import { ACTION_TYPES, SKILL_BY_ME, SKILL_TARGET_ME } from "./constants.mjs";
+import { ACTION_TYPES } from "./constants.mjs";
 
-// class not ready, work in progress
 export default class Fight {
-  // logs [];
   constructor(datetimeStart) {
     this.datetimeStart = datetimeStart;
     this.datetimeEnd = datetimeStart;
     this.logs = [];
+    this.teams = [];
     this.fightsThreshold = 1000 * 5 * 60;
     this.location = {
       campaign: null,
       zone: null,
       POI: null
     };
-    // poi_id bigint,
-    // date_time_start timestamp without time zone,
-    // date_time_end timestamp without time zone,
-    // line_nr integer,
-    // submitters text,
-    // team_alpha text,
-    // team_bravo text
   }
 
   getDBData() {
@@ -28,7 +20,7 @@ export default class Fight {
       location: this.location,
       datetimeStart: this.datetimeStart,
       datetimeEnd: this.datetimeEnd,
-      teams: this.teams
+      teams: this.teams.map(team => Array.from(team))
     };
   }
 
@@ -44,7 +36,22 @@ export default class Fight {
   }
 
   addLog(log) {
-    this.logs = [...this.logs, log];
+    // timestams will not match
+    // complementaryLog always null
+    const complementaryLog = this.logs.find(
+      l =>
+        l.dateTime.getTime() === log.dateTime.getTime() &&
+        l.skillName === log.skillName &&
+        l.skillBy === log.skillTarget &&
+        l.skillTarget === log.skillBy &&
+        l.skillAmount === log.skillAmount
+    );
+
+    if (complementaryLog) {
+      complementaryLog.syncronized = true;
+    } else {
+      this.logs = [...this.logs, log];
+    }
 
     if (log.dateTime > this.datetimeEnd) {
       this.datetimeEnd = log.dateTime;
@@ -53,6 +60,53 @@ export default class Fight {
     if (log.dateTime < this.datetimeStart) {
       this.datetimeStart = log.dateTime;
     }
+
+    return;
+    // that part not ready
+    if (!this.teams.length) {
+      this.createTeamsFromLog(log);
+      return;
+    }
+
+    const [teamAlpha, teamBravo, teamUnknown] = this.teams;
+
+    if (log.skillAction === ACTION_TYPES.HEAL) {
+      if (teamAlpha.has(log.skillBy) || teamAlpha.has(log.skillTarget)) {
+        teamAlpha.add(log.skillBy);
+        teamAlpha.add(log.skillTarget);
+      } else if (teamBravo.has(log.skillBy) || teamBravo.has(log.skillTarget)) {
+        teamBravo.add(log.skillBy);
+        teamBravo.add(log.skillTarget);
+      } else {
+        teamUnknown.add(log.skillBy);
+        teamUnknown.add(log.skillTarget);
+      }
+    } else if (log.skillAction === ACTION_TYPES.HIT) {
+      if (teamAlpha.has(log.skillBy) || teamBravo.has(log.skillTarget)) {
+        teamAlpha.add(log.skillBy);
+        teamBravo.add(log.skillTarget);
+      } else if (teamAlpha.has(log.skillTarget) || teamBravo.has(log.skillBy)) {
+        teamAlpha.add(log.skillTarget);
+        teamBravo.add(log.skillBy);
+      } else {
+        teamUnknown.add(log.skillBy);
+        teamUnknown.add(log.skillTarget);
+      }
+    }
+  }
+
+  createTeamsFromLog(log) {
+    const teamAlpha = new Set();
+    const teamBravo = new Set();
+    const teamUnknown = new Set();
+    if (log.skillAction === ACTION_TYPES.HIT) {
+      teamAlpha.add(log.skillBy);
+      teamBravo.add(log.skillTarget);
+    } else if (log.skillAction === ACTION_TYPES.HEAL) {
+      teamAlpha.add(log.skillBy);
+      teamAlpha.add(log.skillTarget);
+    }
+    this.teams = [teamAlpha, teamBravo, teamUnknown];
   }
 
   fillTeams() {
@@ -62,25 +116,26 @@ export default class Fight {
     }
     const teamAlpha = new Set();
     const teamBravo = new Set();
-    teamAlpha.add(this.logs[0].username);
+    const { username } = this.logs[0];
+    teamAlpha.add(username);
     this.logs.forEach(log => {
-      if (log.skillBy === SKILL_BY_ME && log.skillTarget === SKILL_TARGET_ME) {
+      if (log.skillBy === username && log.skillTarget === username) {
         return;
       }
       if (log.skillAction === ACTION_TYPES.HIT) {
-        if (log.skillBy === SKILL_BY_ME) {
+        if (log.skillBy === username) {
           teamBravo.add(log.skillTarget);
-        } else if (log.skillTarget === SKILL_TARGET_ME) {
+        } else if (log.skillTarget === username) {
           teamBravo.add(log.skillBy);
         }
       } else if (log.skillAction === ACTION_TYPES.HEAL) {
-        if (log.skillBy === SKILL_BY_ME) {
+        if (log.skillBy === username) {
           teamAlpha.add(log.skillTarget);
-        } else if (log.skillTarget === SKILL_TARGET_ME) {
+        } else if (log.skillTarget === username) {
           teamAlpha.add(log.skillBy);
         }
       }
     });
-    this.teams = [Array.from(teamAlpha), Array.from(teamBravo)];
+    this.teams = [teamAlpha, teamBravo];
   }
 }

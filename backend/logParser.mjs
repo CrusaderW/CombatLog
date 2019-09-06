@@ -2,6 +2,7 @@ import {
   ACTION_TYPES,
   ACTION_TYPES_PARSING,
   SKILL_BY_ME,
+  SKILL_TARGET_ME,
   FOR_SPLITTER,
   EVENT_SPLITTER,
   CRITICAL_SUBSTRING
@@ -27,12 +28,12 @@ export default class LogParser {
       skillAction: this.skillAction,
       skillName: this.skillName,
       dateTime: this.dateTime,
-      skillBy: this.skillBy,
-      skillTarget: this.skillTarget,
+      skillBy: this.skillBy === SKILL_BY_ME ? this.username : this.skillBy,
+      skillTarget:
+        this.skillTarget === SKILL_TARGET_ME ? this.username : this.skillTarget,
       skillAmount: +this.skillAmount,
       skillCritical: this.skillCritical,
-      username: this.username,
-      location: this.location
+      username: this.username
     };
   }
 
