@@ -13,17 +13,18 @@ export default class LogsSplitter {
 
     const fights = [];
     let currentFight = new Fight(this.logs[0].dateTime);
+    fights.push(currentFight);
     for (let ii = 0; ii < this.logs.length; ii++) {
       const log = this.logs[ii];
       if (currentFight.isSameFight(log)) {
         currentFight.addLog(log);
       } else {
-        fights.push(currentFight);
         currentFight = new Fight(log.dateTime);
+        fights.push(currentFight);
       }
     }
 
-    fights.forEach(fight => fight.fillTeams());
+    // fights.forEach(fight => fight.fillTeams());
 
     return fights.map(fight => fight.getDBData());
   }

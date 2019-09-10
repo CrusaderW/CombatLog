@@ -8,6 +8,7 @@ import LogParser from "./logParser.mjs";
 import LogsSplitter from "./logsSplitter.mjs";
 import { CombatLog, Fight } from "./mongo.mjs";
 import { getRelatedFights } from "./queries.mjs";
+import FightData from "./fight.mjs";
 import POWER_NAMES from "./powerNames.json";
 
 const fsPromises = fs.promises;
@@ -58,13 +59,7 @@ polka()
     res.end(JSON.stringify(persistedFights));
   })
   .post("/saveFights", async (req, res) => {
-    const { _id } = req.body.locations[0];
-
-    // TODO: fights should be merged
-    const relatedFights = await getRelatedFights(_id);
-    console.log(relatedFights);
-
-    const updatedFights = await Fight.bulkWrite(
+    await Fight.bulkWrite(
       req.body.locations.map(({ _id, location }) => ({
         updateOne: {
           filter: { _id },
@@ -72,7 +67,33 @@ polka()
         }
       }))
     );
-    res.end(JSON.stringify(updatedFights));
+
+    const mergedFights = await Promise.all(
+      req.body.locations.map(async ({ _id, location }) => {
+        const relatedFights = await getRelatedFights(_id);
+
+        if (relatedFights.length <= 1) {
+          return relatedFights[0];
+        }
+
+        const agregatedFight = new FightData(relatedFights[0].datetimeStart);
+        agregatedFight.location = location;
+        relatedFights.forEach(fight =>
+          fight.logs.forEach(log => agregatedFight.addLog(log))
+        );
+
+        await Fight.deleteMany({
+          _id: { $in: relatedFights.map(fight => fight._id) }
+        });
+
+        return await new Fight({
+          ...agregatedFight.getDBData(),
+          published: true
+        }).save();
+      })
+    );
+
+    res.end(JSON.stringify(mergedFights));
   })
   .post("/updateLocation", async (req, res) => {
     res.end(

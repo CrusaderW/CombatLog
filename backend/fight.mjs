@@ -6,7 +6,7 @@ export default class Fight {
     this.datetimeEnd = datetimeStart;
     this.logs = [];
     this.teams = [];
-    this.fightsThreshold = 1000 * 5 * 60;
+    this.fightsThreshold = 1000 * 10 * 60;
     this.location = {
       campaign: null,
       zone: null,
@@ -36,22 +36,18 @@ export default class Fight {
   }
 
   addLog(log) {
-    // timestams will not match
-    // complementaryLog always null
-    const complementaryLog = this.logs.find(
+    const duplicatedLog = this.logs.find(
       l =>
         l.dateTime.getTime() === log.dateTime.getTime() &&
         l.skillName === log.skillName &&
-        l.skillBy === log.skillTarget &&
-        l.skillTarget === log.skillBy &&
         l.skillAmount === log.skillAmount
     );
-
-    if (complementaryLog) {
-      complementaryLog.syncronized = true;
-    } else {
-      this.logs = [...this.logs, log];
+    if (!duplicatedLog) {
+      duplicatedLog.syncronized = true;
+      return;
     }
+
+    this.logs = [...this.logs, log];
 
     if (log.dateTime > this.datetimeEnd) {
       this.datetimeEnd = log.dateTime;

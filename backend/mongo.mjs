@@ -4,22 +4,6 @@ mongoose.connect("mongodb://root:example@mongo:27017/admin", {
   useNewUrlParser: true
 });
 
-export const Fight = mongoose.model(
-  "Fight",
-  mongoose.Schema({
-    logs: Array,
-    location: {
-      campaign: String,
-      zone: String,
-      POI: String
-    },
-    datetimeStart: Date,
-    datetimeEnd: Date,
-    teams: [[String]],
-    published: Boolean
-  })
-);
-
 export const CombatLog = mongoose.model(
   "CombatLog",
   mongoose.Schema({
@@ -39,5 +23,21 @@ export const CombatLog = mongoose.model(
     skillAmount: Number,
     skillCritical: Boolean,
     syncronized: Boolean
+  })
+);
+
+export const Fight = mongoose.model(
+  "Fight",
+  mongoose.Schema({
+    logs: [CombatLog],
+    location: {
+      campaign: String,
+      zone: String,
+      POI: String
+    },
+    datetimeStart: Date,
+    datetimeEnd: Date,
+    teams: [[String]],
+    published: Boolean
   })
 );
