@@ -15,7 +15,9 @@ Vue.use(VueAnalytics, {
   // [Required] Your Google Analytics tracking ID.
   trackingId: "UA-143780876-1",
   // If you're using vue-router, pass the router instance here.
-  vueRouter: router
+  vueRouter: router,
+  // Whether you want page changes to be recorded as pageviews (website) or screenviews (app), default: false
+  trackPage: true
 });
 
 Vue.config.productionTip = false;

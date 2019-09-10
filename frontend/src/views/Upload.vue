@@ -80,31 +80,45 @@ export default {
       const form = new FormData();
       form.append("file", this.file);
       form.append("username", this.username);
+      try {
+        const res = await fetch("/uploadLog", {
+          method: "POST",
+          body: form
+        });
 
-      const res = await fetch("/uploadLog", {
-        method: "POST",
-        body: form
-      });
-      this.fights = await res.json();
+        this.fights = await res.json();
+        this.$analytics.trackEvent("UploadLogBtn", "Upload", this.file.name);
+      } catch (err) {
+        this.$analytics.trackEvent(
+          "UploadLogBtn",
+          "UploadFailed",
+          this.file.name
+        );
+      }
       this.fights.forEach(fight => {
         this.locations[fight._id] = fight.location;
       });
       console.log(this.fights);
     },
     async saveFights() {
-      const res = await fetch("/saveFights", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json"
-        },
-        body: JSON.stringify({
-          locations: this.fights.map(fight => ({
-            location: fight.location,
-            _id: fight._id
-          }))
-        })
-      });
-      const data = await res.json();
+      try {
+        const res = await fetch("/saveFights", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json"
+          },
+          body: JSON.stringify({
+            locations: this.fights.map(fight => ({
+              location: fight.location,
+              _id: fight._id
+            }))
+          })
+        });
+        const data = await res.json();
+        this.$analytics.trackEvent("SaveFightsBtn", "Save");
+      } catch (err) {
+        this.$analytics.trackEvent("SaveFightsBtn", "SaveFailed");
+      }
       console.log(data);
     },
     removeFile() {

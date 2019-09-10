@@ -23,9 +23,8 @@ export default {
   },
   methods: {
     async updateLocation() {
-      this.fight.location = await fetch(
-        "/updateLocation",
-        {
+      try {
+        this.fight.location = await fetch("/updateLocation", {
           method: "POST",
           headers: {
             "content-type": "application/json"
@@ -34,8 +33,11 @@ export default {
             _id: this.fight._id,
             location: this.fight.location
           })
-        }
-      );
+        });
+        this.$analytics.trackEvent("UpdateLocation", "update", _id);
+      } catch (err) {
+        this.$analytics.trackEvent("UpdateLocation", "updateFailed", _id);
+      }
     }
   }
 };
