@@ -10,7 +10,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
-      - /var/lib/mongo:/var/lib/combat_log_mongo
+      - /var/lib/mongo_combat_log_data:/data
 
   combat_log:
     build: ./
