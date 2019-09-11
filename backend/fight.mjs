@@ -43,7 +43,6 @@ export default class Fight {
         l.skillAmount === log.skillAmount
     );
     if (!duplicatedLog) {
-      duplicatedLog.syncronized = true;
       return;
     }
 
