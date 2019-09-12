@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
-mongoose.connect("mongodb://root:example@mongo:27017/admin", {
+mongoose.connect('mongodb://root:example@localhost:27017/admin', {
   useNewUrlParser: true
-});
+})
 
 const CombatLogSchema = mongoose.Schema({
   // user_id bigint,
@@ -20,14 +20,14 @@ const CombatLogSchema = mongoose.Schema({
   skillTarget: String,
   skillAmount: Number,
   skillCritical: Boolean
-});
+})
 
-export const CombatLog = mongoose.model("CombatLog", CombatLogSchema);
+export const CombatLog = mongoose.model('CombatLog', CombatLogSchema)
 
 export const Fight = mongoose.model(
-  "Fight",
+  'Fight',
   mongoose.Schema({
-    logs: [CombatLogSchema],
+    logs: Array,
     location: {
       campaign: String,
       zone: String,
@@ -38,4 +38,4 @@ export const Fight = mongoose.model(
     teams: [[String]],
     published: Boolean
   })
-);
+)
