@@ -6,9 +6,6 @@ services:
   mongo:
     image: mongo
     restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - /var/lib/mongo_combat_log_data:/data
     ports:
@@ -16,7 +13,6 @@ services:
 
   combat_log:
     build: ./
-    container_name: combat_log
     restart: always
     ports:
       - 80:80
