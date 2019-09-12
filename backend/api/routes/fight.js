@@ -1,6 +1,6 @@
 import multer from 'multer'
 import fs from 'fs'
-import { Fight } from '../../models/Fight.js'
+import { Fight } from '../../models/fight.js'
 import LogParser from '../../logParser.mjs'
 import LogsSplitter from '../../logsSplitter.mjs'
 import { getRelatedFights } from '../../queries.mjs'

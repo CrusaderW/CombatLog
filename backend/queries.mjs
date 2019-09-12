@@ -1,4 +1,4 @@
-import { Fight } from './models/Fight.js'
+import { Fight } from './models/fight.js'
 
 export const getRelatedFights = async fightId => {
   const newFight = await Fight.findById(fightId)
