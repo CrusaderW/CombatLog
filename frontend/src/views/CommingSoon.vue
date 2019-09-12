@@ -1,12 +1,12 @@
 <template>
   <div class="comming soon">
     <h1>COMMING SOON</h1>
-    <d-c-test />
+    <fight-logs-visualization />
   </div>
 </template>
 <script>
-import DCTest from "../components/DCTest.vue";
+import FightLogsVisualization from "../components/FightLogsVisualization.vue";
 export default {
-  components: { DCTest }
+  components: { FightLogsVisualization }
 };
 </script>

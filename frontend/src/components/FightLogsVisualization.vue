@@ -56,28 +56,15 @@ import "dc/dc.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import dc from "dc";
 import crossfilter from "crossfilter2";
-import dcTestData from "../assets/dc-test-data.json";
-
-const DATA = dcTestData
-  .filter(
-    a =>
-      a.skillName &&
-      a.skillBy &&
-      a.skillTarget &&
-      a.skillName.trim() &&
-      a.skillBy.trim() &&
-      a.skillTarget.trim()
-  )
-  .map(d => ({
-    ...d,
-    dateTime: new Date(d.dateTime)
-  }));
 
 export default {
+  props: {
+    fight: Object
+  },
   data() {
     return {
-      ndx: crossfilter(DATA),
-      username: DATA[0].username
+      ndx: null
+      // username: DATA[0].username
     };
   },
   methods: {
@@ -133,6 +120,7 @@ export default {
         .elasticX(true);
     },
     prepareDamageTakenChart() {
+      return;
       const skillByChart = dc.rowChart("#damage-taken-chart");
       const damageTakenDimension = this.ndx.dimension(d => d.skillBy);
 
@@ -221,6 +209,21 @@ export default {
     },
 
     initializeCharts() {
+      const logs = this.fight.logs
+        .filter(
+          a =>
+            a.skillName &&
+            a.skillBy &&
+            a.skillTarget &&
+            a.skillName.trim() &&
+            a.skillBy.trim() &&
+            a.skillTarget.trim()
+        )
+        .map(d => ({
+          ...d,
+          dateTime: new Date(d.dateTime)
+        }));
+      this.ndx = crossfilter(logs);
       this.prepareCriticalChart();
       this.prepareSkillActionChart();
       this.prepareSkillsChart();

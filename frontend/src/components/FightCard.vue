@@ -8,6 +8,7 @@
     <el-input class="location_input" v-model="fight.location.zone" placeholder="Zone"></el-input>
     <el-input class="location_input" v-model="fight.location.POI" placeholder="POI"></el-input>
     <el-button style="margin-top: 15px" @click="updateLocation">Update</el-button>
+    <el-button type="primary" style="margin-left: 15px" @click="selectFight">Select</el-button>
   </el-card>
 </template>
 
@@ -22,9 +23,12 @@ export default {
     };
   },
   methods: {
+    selectFight() {
+      this.$emit("select-fight", this.fight);
+    },
     async updateLocation() {
       try {
-        this.fight.location = await fetch("/updateLocation", {
+        this.fight.location = await (await fetch("/updateLocation", {
           method: "POST",
           headers: {
             "content-type": "application/json"
@@ -33,10 +37,14 @@ export default {
             _id: this.fight._id,
             location: this.fight.location
           })
-        });
-        this.$analytics.trackEvent("UpdateLocation", "update", _id);
+        })).json();
+        this.$analytics.trackEvent("UpdateLocation", "update", this.fight._id);
       } catch (err) {
-        this.$analytics.trackEvent("UpdateLocation", "updateFailed", _id);
+        this.$analytics.trackEvent(
+          "UpdateLocation",
+          "updateFailed",
+          this.fight._id
+        );
       }
     }
   }
