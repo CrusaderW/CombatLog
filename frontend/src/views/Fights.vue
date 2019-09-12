@@ -8,7 +8,12 @@
       <el-col :span="10" :offset="7">
         <div v-if="fights" style="margin-top: 15px;">
           <div v-for="fight in fights" :key="fight._id">
-            <fight-card :fight="fight" :key="fight._id" @select-fight="selectFight" />
+            <fight-card
+              :fight="fight"
+              :key="fight._id"
+              @select-fight="selectFight"
+              @delete-fight="deleteFight"
+            />
           </div>
         </div>
       </el-col>
@@ -42,6 +47,9 @@ export default {
   methods: {
     selectFight(fight) {
       this.selectedFight = fight;
+    },
+    deleteFight(fightId) {
+      this.fights = this.fights.filter(fight => fight._id !== fightId);
     }
   },
   async mounted() {

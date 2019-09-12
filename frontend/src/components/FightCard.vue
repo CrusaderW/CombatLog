@@ -7,7 +7,8 @@
     </el-select>
     <el-input class="location_input" v-model="fight.location.zone" placeholder="Zone"></el-input>
     <el-input class="location_input" v-model="fight.location.POI" placeholder="POI"></el-input>
-    <el-button style="margin-top: 15px" @click="updateLocation">Update</el-button>
+    <el-button style="margin-top: 15px" type="danger" @click="deleteFight">Delete</el-button>
+    <el-button style="margin-left: 15px" @click="updateLocation">Update</el-button>
     <el-button type="primary" style="margin-left: 15px" @click="selectFight">Select</el-button>
   </el-card>
 </template>
@@ -43,6 +44,27 @@ export default {
         this.$analytics.trackEvent(
           "UpdateLocation",
           "updateFailed",
+          this.fight._id
+        );
+      }
+    },
+    async deleteFight() {
+      try {
+        const { success, err } = await (await fetch("/deleteFight", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ _id: this.fight._id })
+        })).json();
+        if (success) {
+          this.$analytics.trackEvent("DeleteFight", "delete", this.fight._id);
+          this.$emit("delete-fight", this.fight._id);
+        } else {
+          throw new Error(err);
+        }
+      } catch (err) {
+        this.$analytics.trackEvent(
+          "DeleteFight",
+          "deleteFailed",
           this.fight._id
         );
       }
