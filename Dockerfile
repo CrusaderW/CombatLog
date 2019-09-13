@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:12-alpine
 
 # install simple http server for serving static content
 
@@ -7,6 +7,9 @@ WORKDIR /app
 
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
+
+#Debugging
+RUN node -v
 
 # install project dependencies and build them
 RUN node powersLoader.js
