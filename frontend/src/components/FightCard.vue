@@ -7,20 +7,23 @@
     </el-select>
     <el-input class="location_input" v-model="fight.location.zone" placeholder="Zone"></el-input>
     <el-input class="location_input" v-model="fight.location.POI" placeholder="POI"></el-input>
-    <el-button style="margin-top: 15px" type="danger" @click="deleteFight">Delete</el-button>
-    <el-button style="margin-left: 15px" @click="updateLocation">Update</el-button>
-    <el-button type="primary" style="margin-left: 15px" @click="selectFight">Select</el-button>
+    <div v-if="selectable">
+      <el-button style="margin-top: 15px" type="danger" @click="deleteFight">Delete</el-button>
+      <el-button style="margin-left: 15px" @click="updateLocation">Update</el-button>
+      <el-button type="primary" style="margin-left: 15px" @click="selectFight">Select</el-button>
+    </div>
   </el-card>
 </template>
 
 <script>
 export default {
   props: {
-    fight: Object
+    fight: Object,
+    selectable: Boolean
   },
   data() {
     return {
-      campaigns: ["PvP Training", "Trial of Arkon EU", "Trial of Gaea EU"]
+      campaigns: ["PvP Training", "Trial of Yaga EU"]
     };
   },
   methods: {

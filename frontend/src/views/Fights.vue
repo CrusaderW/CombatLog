@@ -11,6 +11,7 @@
             <fight-card
               :fight="fight"
               :key="fight._id"
+              :selectable="true"
               @select-fight="selectFight"
               @delete-fight="deleteFight"
             />

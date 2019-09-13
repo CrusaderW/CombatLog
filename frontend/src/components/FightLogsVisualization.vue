@@ -31,6 +31,22 @@
           </div>
         </el-row>
         <el-row>
+          <el-col :span="12" :offset="6">Showing {{tabelBegin}}-{{tabelEnd}}</el-col>
+          <el-button-group>
+            <el-button
+              type="primary"
+              icon="el-icon-arrow-left"
+              @click="last"
+              size="small"
+              :disabled="lastBtnDisabled"
+            >Previous Page</el-button>
+            <el-button type="primary" @click="next" size="small" :disabled="nextBtnDisabled">
+              Next Page
+              <i class="el-icon-arrow-right el-icon-right"></i>
+            </el-button>
+          </el-button-group>
+        </el-row>
+        <el-row style="margin-top: 15px;">
           <div id="data-table" class="table table-hover" />
         </el-row>
       </el-col>
@@ -63,8 +79,14 @@ export default {
   },
   data() {
     return {
-      ndx: null
-      // username: DATA[0].username
+      ndx: null,
+      logsTable: null,
+      pageCount: 15,
+      offset: 0,
+      tabelBegin: 0,
+      tabelEnd: 0,
+      nextBtnDisabled: false,
+      lastBtnDisabled: false
     };
   },
   methods: {
@@ -189,11 +211,12 @@ export default {
       logsCount.crossfilter(this.ndx).groupAll(this.ndx.groupAll());
     },
     prepareTabel() {
-      const logsTable = dc.dataTable("#data-table");
+      this.logsTable = dc.dataTable("#data-table");
       const dateDimension = this.ndx.dimension(d => d.dateTime);
-      logsTable
+      this.logsTable
         .dimension(dateDimension)
-        .size(15)
+        .size(Infinity)
+        .showSections(false)
         .columns([
           { label: "Date", format: d => d.dateTime.toLocaleDateString() },
           { label: "Skill Action", format: d => d.skillAction },
@@ -205,7 +228,10 @@ export default {
             label: "Is Critical",
             format: d => (d.skillCritical ? "Yes" : "No")
           }
-        ]);
+        ])
+        .on("preRender", this.updateOffset)
+        .on("preRedraw", this.updateOffset)
+        .on("pretransition", this.displayCounts);
     },
 
     initializeCharts() {
@@ -233,6 +259,45 @@ export default {
       this.prepareTabel();
 
       dc.renderAll();
+    },
+
+    displayCounts() {
+      const totFilteredRecs = this.ndx.groupAll().value();
+      this.tabelEnd =
+        this.offset + this.pageCount > totFilteredRecs
+          ? totFilteredRecs
+          : this.offset + this.pageCount;
+
+      this.offset + this.pageCount > totFilteredRecs
+        ? totFilteredRecs
+        : this.offset + this.pageCount;
+      this.tabelBegin = this.tabelEnd === 0 ? this.offset : this.offset + 1;
+      this.nextBtnDisabled = this.offset + this.pageCount >= totFilteredRecs;
+      this.lastBtnDisabled = this.offset - this.pageCount < 0;
+    },
+
+    updateOffset() {
+      const totFilteredRecs = this.ndx.groupAll().value();
+
+      this.offset =
+        this.offset >= totFilteredRecs
+          ? Math.floor((totFilteredRecs - 1) / this.pageCount) * this.pageCount
+          : this.offset;
+
+      this.offset = this.offset < 0 ? 0 : this.offset;
+      this.logsTable.beginSlice(this.offset);
+      this.logsTable.endSlice(this.offset + this.pageCount);
+    },
+
+    next() {
+      this.offset += this.pageCount;
+      this.updateOffset();
+      this.logsTable.redraw();
+    },
+    last() {
+      this.offset -= this.pageCount;
+      this.updateOffset();
+      this.logsTable.redraw();
     }
   },
   mounted() {
