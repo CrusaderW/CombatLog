@@ -5,24 +5,7 @@
       <el-col :span="10" :offset="7">
         <div v-if="fights" style="margin-top: 15px;">
           <div v-for="fight in fights" v-bind:key="fight._id">
-            <el-card style="margin-bottom: 15px;">
-              <div style="margin-bottom: 15px">From {{fight.datetimeStart}}</div>
-              <div style="margin-bottom: 15px">To {{fight.datetimeEnd}}</div>
-              <el-select
-                class="location_input"
-                v-model="fight.location.campaign"
-                placeholder="campaign"
-              >
-                <el-option
-                  v-for="campaign in campaigns"
-                  :key="campaign"
-                  :label="campaign"
-                  :value="campaign"
-                ></el-option>
-              </el-select>
-              <el-input class="location_input" v-model="fight.location.zone" placeholder="Zone"></el-input>
-              <el-input class="location_input" v-model="fight.location.POI" placeholder="POI"></el-input>
-            </el-card>
+            <fight-card :fight="fight" :key="fight._id" />
           </div>
           <el-button size="small" type="primary" @click="saveFights">Save Fights</el-button>
         </div>
@@ -61,8 +44,13 @@
 </style>
 
 <script>
+import FightCard from "../components/FightCard.vue";
+
 export default {
   name: "Upload",
+  components: {
+    FightCard
+  },
   data() {
     return {
       file: null,
@@ -116,10 +104,10 @@ export default {
         });
         const data = await res.json();
         this.$analytics.trackEvent("SaveFightsBtn", "Save");
+        console.log(data);
       } catch (err) {
         this.$analytics.trackEvent("SaveFightsBtn", "SaveFailed");
       }
-      console.log(data);
     },
     removeFile() {
       this.file = null;
