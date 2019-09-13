@@ -30,26 +30,8 @@ export default {
     selectFight() {
       this.$emit("select-fight", this.fight);
     },
-    async updateLocation() {
-      try {
-        this.fight.location = await (await fetch("/updateLocation", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json"
-          },
-          body: JSON.stringify({
-            _id: this.fight._id,
-            location: this.fight.location
-          })
-        })).json();
-        this.$analytics.trackEvent("UpdateLocation", "update", this.fight._id);
-      } catch (err) {
-        this.$analytics.trackEvent(
-          "UpdateLocation",
-          "updateFailed",
-          this.fight._id
-        );
-      }
+    updateLocation() {
+      this.$emit("update-fight-location", this.fight);
     },
     async deleteFight() {
       try {

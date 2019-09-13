@@ -13,6 +13,7 @@
               :key="fight._id"
               :selectable="true"
               @select-fight="selectFight"
+              @update-fight-location="updateFightLocation"
               @delete-fight="deleteFight"
             />
           </div>
@@ -51,6 +52,23 @@ export default {
     },
     deleteFight(fightId) {
       this.fights = this.fights.filter(fight => fight._id !== fightId);
+    },
+    async updateFightLocation(fight) {
+      try {
+        this.fights = await (await fetch("/updateLocation", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json"
+          },
+          body: JSON.stringify({
+            _id: fight._id,
+            location: fight.location
+          })
+        })).json();
+        this.$analytics.trackEvent("UpdateLocation", "update", fight._id);
+      } catch (err) {
+        this.$analytics.trackEvent("UpdateLocation", "updateFailed", fight._id);
+      }
     }
   },
   async mounted() {

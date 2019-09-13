@@ -3,20 +3,39 @@ import fs from 'fs'
 import { Fight } from '../../models/fight.js'
 import LogParser from '../../logParser.mjs'
 import LogsSplitter from '../../logsSplitter.mjs'
-import { getRelatedFights } from '../../queries.mjs'
+import { getRelatedFights, getLastFights } from '../../queries.mjs'
 import POWER_NAMES from '../../powerNames.json'
 import FightData from '../../fight.mjs'
 
 const upload = multer({ dest: 'uploads/' })
 const fsPromises = fs.promises
 
+const mergeFight = async ({ _id, location }) => {
+  const relatedFights = await getRelatedFights(_id)
+
+  if (relatedFights.length <= 1) {
+    return relatedFights[0]
+  }
+
+  const agregatedFight = new FightData(relatedFights[0].datetimeStart)
+  agregatedFight.location = location
+  relatedFights.forEach(fight =>
+    fight.logs.forEach(log => agregatedFight.addLog(log))
+  )
+
+  await Fight.deleteMany({
+    _id: { $in: relatedFights.map(fight => fight._id) }
+  })
+
+  return new Fight({
+    ...agregatedFight.getDBData(),
+    published: true
+  }).save()
+}
+
 export default app => {
   app.get('/lastFights', async (req, res) => {
-    const fights = await Fight.find({ published: true }, null, {
-      limit: 10,
-      sort: { datetimeStart: -1 }
-    })
-    res.end(JSON.stringify(fights))
+    res.end(JSON.stringify(await getLastFights()))
   })
 
   app.post('/uploadLog', upload.single('file'), async (req, res) => {
@@ -55,46 +74,23 @@ export default app => {
       }))
     )
 
-    const mergedFights = await Promise.all(
-      req.body.locations.map(async ({ _id, location }) => {
-        const relatedFights = await getRelatedFights(_id)
-
-        if (relatedFights.length <= 1) {
-          return relatedFights[0]
-        }
-
-        const agregatedFight = new FightData(relatedFights[0].datetimeStart)
-        agregatedFight.location = location
-        relatedFights.forEach(fight =>
-          fight.logs.forEach(log => agregatedFight.addLog(log))
-        )
-
-        await Fight.deleteMany({
-          _id: { $in: relatedFights.map(fight => fight._id) }
-        })
-
-        return new Fight({
-          ...agregatedFight.getDBData(),
-          published: true
-        }).save()
-      })
-    )
+    const mergedFights = await Promise.all(req.body.locations.map(mergeFight))
 
     res.end(JSON.stringify(mergedFights))
   })
 
   app.post('/updateLocation', async (req, res) => {
-    res.end(
-      JSON.stringify(
-        (await Fight.findByIdAndUpdate(
-          req.body._id,
-          {
-            location: req.body.location
-          },
-          { new: true }
-        )).location
-      )
+    const { _id, location } = req.body
+    await Fight.findByIdAndUpdate(
+      req.body._id,
+      {
+        location: req.body.location
+      },
+      { new: true }
     )
+    await mergeFight({ _id, location })
+
+    res.end(JSON.stringify(await getLastFights()))
   })
 
   app.delete('/deleteFight', async (req, res) => {

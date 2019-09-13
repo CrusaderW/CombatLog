@@ -1,5 +1,11 @@
 import { Fight } from './models/fight.js'
 
+export const getLastFights = () =>
+  Fight.find({ published: true }, null, {
+    limit: 10,
+    sort: { datetimeStart: -1 }
+  })
+
 export const getRelatedFights = async fightId => {
   const newFight = await Fight.findById(fightId)
   const tenMinutes = 1000 * 60 * 10
