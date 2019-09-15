@@ -14,7 +14,11 @@ services:
 
   combat_log:
     build: ./
+    image: combatlog_combat_log
     restart: always
+    volumes:
+      - ./frontend:/app/frontend
+      - ./backend:/app/backend
     ports:
       - 80:80
     links:
