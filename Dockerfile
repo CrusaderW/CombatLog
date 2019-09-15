@@ -9,7 +9,6 @@ WORKDIR /app
 COPY . .
 
 #Debugging
-RUN node -v
 
 # install project dependencies and build them
 RUN node powersLoader.js
