@@ -8,6 +8,7 @@ You need the following things installed:
 - docker
 - docker-compose
 - pip3
+- node v12
 
 ## Submodules:
 - This repository usses the datastructures for Crowfall Skills and Disciplines of https://github.com/MalekaiProject/crowfall-data
