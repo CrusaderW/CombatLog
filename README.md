@@ -16,7 +16,15 @@ You need the following things installed:
 `git submodule update --remote`
 
 ## running the server
-Run once: `git submodule update --init` and `docker-compose -f docker-compose_dev.yml build`
+Run the following commands once:
+`git submodule update --init`
+`docker-compose -f docker-compose_dev.yml build`
+`node powersLoader.js`
+`cd frontend`
+`npm install`
+`cd ../backend`
+`npm install`
 
+To run in development mode:
 `docker-compose -f docker-compose_dev.yml up`
 
