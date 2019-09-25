@@ -7,7 +7,7 @@ Please upvote this issue if you want this project to stay alive: https://issuetr
 You need the following things installed:
 - docker
 - docker-compose
-- pip3
+- pip3 for AWS deployment
 - node v12
 
 ## Submodules:
