@@ -46,7 +46,13 @@ export default class FileParser {
           this.powerNames,
           unrecognizedSkills
         );
-        logParser.parse();
+        try {
+          logParser.parse();
+        }
+        catch(err) {
+          console.warn(logParser.error);
+          console.warn(err);
+        }
         if (!logParser.error) {
           this.parsedLogs.push(logParser.getDBData());
         }
