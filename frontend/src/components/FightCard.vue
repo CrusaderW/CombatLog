@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-      campaigns: ["PvP Training", "Trial of Yaga EU"]
+      campaigns: ["PvP Training", "Trial of Yaga EU, Trail of Perstilyn EU"]
     };
   },
   methods: {
