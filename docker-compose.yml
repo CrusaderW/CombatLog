@@ -7,16 +7,20 @@ services:
     image: mongo
     restart: always
     volumes:
-      - /var/lib/mongo_combat_log_data/db:/data/db
-      - /var/lib/mongo_combat_log_data/configdb:/data/configdb
+      - ./.var/lib/mongo_combat_log_data/db:/data/db
+      - ./.var/lib/mongo_combat_log_data/configdb:/data/configdb
     ports:
       - 27017:27017
 
   combat_log:
     build: ./
+    image: combatlog_combat_log
+    environment:
+      MONGO_URL: mongodb://mongo:27017/admin
     restart: always
     ports:
-      - 80:80
+      - 8080:80
+    depends_on:
+      - mongo
     links:
       - mongo
-

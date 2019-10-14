@@ -7,20 +7,7 @@ services:
     image: mongo
     restart: always
     volumes:
-      - /var/lib/mongo_combat_log_data/db:/data/db
-      - /var/lib/mongo_combat_log_data/configdb:/data/configdb
+      - ./.var/lib/mongo_combat_log_data_dev/db:/data/db
+      - ./.var/lib/mongo_combat_log_data_dev/configdb:/data/configdb
     ports:
       - 27017:27017
-
-  combat_log:
-    build: ./
-    image: combatlog_combat_log
-    restart: always
-    volumes:
-      - ./frontend:/app/frontend
-      - ./backend:/app/backend
-    ports:
-      - 80:80
-    links:
-      - mongo
-
