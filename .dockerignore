@@ -3,3 +3,6 @@ Dockerfile
 README.md
 LICENSE
 combatlogparser
+node_modules
+**/node_modules
+backend/uploads

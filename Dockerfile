@@ -11,13 +11,14 @@ COPY . .
 #Debugging
 
 # install project dependencies and build them
+ENV NODE_ENV=production
 RUN node powersLoader.js
 WORKDIR /app/frontend
 RUN npm install
 RUN npm run build
 WORKDIR /app/backend
 RUN npm install
-
 ENV PORT=80
+
 EXPOSE ${PORT}
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
