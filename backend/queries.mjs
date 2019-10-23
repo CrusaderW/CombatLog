@@ -1,7 +1,7 @@
 import { Fight } from './models/fight.js'
 
 export const getLastFights = () =>
-  Fight.find({ published: true }, null, {
+  Fight.find({ /*published: true*/ }, null, {
     limit: 10,
     sort: { datetimeStart: -1 }
   })
@@ -17,7 +17,7 @@ export const getRelatedFights = async fightId => {
   )
 
   return Fight.find({
-    published: true,
+    //published: true,
     'location.POI': newFight.location.POI,
     'location.zone': newFight.location.zone,
     'location.campaign': newFight.location.campaign,
