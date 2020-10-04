@@ -172,7 +172,7 @@ export default {
     },
     prepareSkillByChart() {
       const skillByChart = dc.barChart("#skill-by-chart");
-      const skillByDimension = this.ndx.dimension(d => d.skillBy);
+      const skillByDimension = this.ndx.dimension(d => d.source);
 
       function sel_stack(i) {
         return function(d) {
@@ -182,11 +182,11 @@ export default {
 
       const hpDealtPerTarget = skillByDimension.group().reduce(
         (p, v) => {
-          p[v.skillAction] += v.skillAmount;
+          p[v.action] += v.skillAmount;
           return p;
         },
         (p, v) => {
-          p[v.skillAction] -= v.skillAmount;
+          p[v.action] -= v.skillAmount;
           return p;
         },
         () => ({ HIT: 0, HEAL: 0 })
@@ -212,17 +212,17 @@ export default {
     },
     prepareTabel() {
       this.logsTable = dc.dataTable("#data-table");
-      const dateDimension = this.ndx.dimension(d => d.dateTime);
+      const dateDimension = this.ndx.dimension(d => d.timestamp);
       this.logsTable
         .dimension(dateDimension)
         .size(Infinity)
         .showSections(false)
         .columns([
-          { label: "Date", format: d => d.dateTime.toLocaleDateString() },
-          { label: "Skill Action", format: d => d.skillAction },
+          { label: "Date", format: d => d.timestamp },
+          { label: "Skill Action", format: d => d.action },
           { label: "Skill Name", format: d => d.skillName },
-          { label: "Skill By", format: d => d.skillBy },
-          { label: "Skill Target", format: d => d.skillTarget },
+          { label: "Skill By", format: d => d.source },
+          { label: "Skill Target", format: d => d.target },
           { label: "Skill Amount", format: d => d.skillAmount },
           {
             label: "Is Critical",
@@ -235,15 +235,15 @@ export default {
     },
 
     initializeCharts() {
-      const logs = this.fight.logs
+      const logs = this.fight
         .filter(
           a =>
             a.skillName &&
-            a.skillBy &&
-            a.skillTarget &&
+            a.source &&
+            a.target &&
             a.skillName.trim() &&
-            a.skillBy.trim() &&
-            a.skillTarget.trim()
+            a.source.trim() &&
+            a.target.trim()
         )
         .map(d => ({
           ...d,

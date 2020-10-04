@@ -1,3 +1,0 @@
-[submodule "backend/crowfall-data"]
-	path = backend/crowfall-data
-	url = https://github.com/MalekaiProject/crowfall-data

@@ -72,7 +72,9 @@ export default {
     }
   },
   async mounted() {
-    this.fights = await (await fetch("/lastFights")).json();
+    var date_today = new Date().toJSON().slice(0,10);
+    this.fights = await (await fetch("http://212.83.56.166:5000/getParsedLogsByDate?date="+date_today)).json();
+    this.selectedFight = this.fights.logs;
   }
 };
 </script>
