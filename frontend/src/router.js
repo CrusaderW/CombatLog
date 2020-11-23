@@ -16,14 +16,14 @@ export default new Router({
       component: () => import("./views/Logs.vue")
     },
     {
-      path: "/fights",
-      name: "fightsPage",
-      component: () => import("./views/Fights.vue")
+      path: "/mylogs",
+      name: "mylogsPage",
+      component: () => import("./views/myLogs.vue")
     },
     {
-      path: "/commingsoon",
-      name: "commingSoon",
-      component: () => import("./views/CommingSoon.vue")
+      path: "/fights",
+      name: "fights",
+      component: () => import("./views/Fights.vue")
     },
     {
       path: "/",

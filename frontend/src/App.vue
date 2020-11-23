@@ -3,7 +3,7 @@
     <div id="nav">
       <router-link to="/upload">Upload</router-link>
       {{" | "}}
-      <router-link to="/commingsoon">Logs</router-link>
+      <router-link to="/mylogs">My Logs</router-link>
       {{" | "}}
       <router-link to="/fights">Fights</router-link>
       {{" | "}}
