@@ -1,6 +1,6 @@
 <template>
-  <div class="comming soon">
-    <h1>COMMING SOON</h1>
+  <div class="fights">
+    <h1>Your Fights</h1>
     <fight-logs-visualization />
   </div>
 </template>

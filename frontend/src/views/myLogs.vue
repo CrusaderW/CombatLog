@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Fights page</h1>
+    <h1>My Logs</h1>
     <el-row v-if="selectedFight" :gutter="20">
       <fight-logs-visualization :fight="selectedFight" />
     </el-row>
@@ -73,7 +73,7 @@ export default {
   },
   async mounted() {
     var date_today = new Date().toJSON().slice(0,10);
-    this.fights = await (await fetch("http://212.83.56.166:5000/getParsedLogsByDate?date="+date_today)).json();
+    this.fights = await (await fetch("http://212.83.56.166:5000/getMyLogs?date="+date_today+"&username=CrusaderW")).json();
     this.selectedFight = this.fights.logs;
   }
 };
