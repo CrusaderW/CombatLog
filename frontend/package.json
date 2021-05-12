@@ -14,7 +14,7 @@
     "@vue/eslint-config-prettier": "^5.1.0",
     "aws-sdk": "^2.720.0",
     "bootstrap": "^4.5.0",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "core-js": "^2.6.11",
     "crossfilter2": "^1.5.2",
     "d3": "^5.16.0",
