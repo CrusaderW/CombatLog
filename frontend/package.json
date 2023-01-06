@@ -8,9 +8,9 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@vue/cli-plugin-babel": "^3.12.1",
+    "@vue/cli-plugin-babel": "^5.0.8",
     "@vue/cli-plugin-eslint": "^3.12.1",
-    "@vue/cli-service": "^3.12.1",
+    "@vue/cli-service": "^5.0.8",
     "@vue/eslint-config-prettier": "^5.1.0",
     "aws-sdk": "^2.720.0",
     "bootstrap": "^4.5.0",
